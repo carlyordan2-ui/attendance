@@ -1,12 +1,12 @@
 {
-  "projectId": "positive-question-m98sv",
-  "appId": "1:689409315976:web:f871b260e43a3af915fb3d",
-  "apiKey": "AIzaSyDZlcSkOX5KgW4TZwWf5ATMm3fhxWPm6ak",
-  "authDomain": "positive-question-m98sv.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-attendease-41c37e03-28c2-4bdc-8466-12e01c07c5ff",
-  "storageBucket": "positive-question-m98sv.firebasestorage.app",
-  "messagingSenderId": "689409315976",
-  "measurementId": "",
-  "oAuthClientId": "689409315976-el8pbhvctnkno3k6d60t2cmn2ghvh7cr.apps.googleusercontent.com",
+  "projectId": "attendance-34b40",
+  "appId": "1:1090490838264:web:24f3928e1257d32e365f0d",
+  "apiKey": "AIzaSyCMqaFATCNGI6-VEQUqP-EOh_-My3TL9ZY",
+  "authDomain": "attendance-34b40.firebaseapp.com",
+  "firestoreDatabaseId": "",
+  "storageBucket": "attendance-34b40.firebasestorage.app",
+  "messagingSenderId": "1090490838264",
+  "measurementId": "G-ELHEJXHDQK",
+  "oAuthClientId": "",
   "recaptchaSiteKey": ""
 }
