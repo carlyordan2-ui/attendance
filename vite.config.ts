@@ -8,7 +8,7 @@ export default defineConfig(({ command }) => {
     // GitHub Pages serves project sites from /<repo-name>/, so the base
     // path must match the repo name exactly. Update 'attendease' below
     // if the GitHub repo is named something else.
-    base: command === 'build' ? '/attendease/' : '/',
+    base: command === 'build' ? '/attendance/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
