@@ -12,7 +12,7 @@ import { StudentDashboard } from './components/student/StudentDashboard';
 import { GraduationCap, AlertOctagon, LogOut, Loader2 } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
-  const { firebaseUser, userProfile, loading, selectedRole, setSelectedRole, logout } = useAuth();
+  const { firebaseUser, userProfile, loading, profileLoadTimedOut, retryProfileLoad, selectedRole, setSelectedRole, logout } = useAuth();
   const [isRegistering, setIsRegistering] = useState(false);
 
   // 1. Loading State
@@ -70,8 +70,37 @@ const MainAppContent: React.FC = () => {
         <Header />
         <main className="flex-grow flex items-center justify-center p-4">
           <div className="text-center space-y-4 max-w-sm">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-indigo-500" />
-            <p className="text-xs text-slate-500">Loading user profile attributes...</p>
+            {profileLoadTimedOut ? (
+              <>
+                <AlertOctagon className="h-8 w-8 mx-auto text-amber-500" />
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold">This is taking longer than expected</p>
+                  <p className="text-xs text-slate-500">
+                    We couldn't load your profile. This can happen after a slow connection during signup.
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <button
+                    onClick={retryProfileLoad}
+                    className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 flex items-center gap-1"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    Log out and try again
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Loader2 className="h-8 w-8 animate-spin mx-auto text-indigo-500" />
+                <p className="text-xs text-slate-500">Loading user profile attributes...</p>
+              </>
+            )}
           </div>
         </main>
         <Footer />
