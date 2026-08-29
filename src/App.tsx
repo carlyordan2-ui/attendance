@@ -12,7 +12,7 @@ import { StudentDashboard } from './components/student/StudentDashboard';
 import { GraduationCap, AlertOctagon, LogOut, Loader2 } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
-  const { firebaseUser, userProfile, loading, profileLoadTimedOut, retryProfileLoad, selectedRole, setSelectedRole, logout } = useAuth();
+  const { firebaseUser, userProfile, loading, profileLoadTimedOut, profileLoadErrorDetail, retryProfileLoad, selectedRole, setSelectedRole, logout } = useAuth();
   const [isRegistering, setIsRegistering] = useState(false);
 
   // 1. Loading State
@@ -78,6 +78,11 @@ const MainAppContent: React.FC = () => {
                   <p className="text-xs text-slate-500">
                     We couldn't load your profile. This can happen after a slow connection during signup.
                   </p>
+                  {profileLoadErrorDetail && (
+                    <p className="text-[10px] font-mono text-red-500 dark:text-red-400 break-all bg-red-500/10 rounded px-2 py-1 mt-2">
+                      {profileLoadErrorDetail}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <button
