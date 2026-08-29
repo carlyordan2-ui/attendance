@@ -21,6 +21,8 @@ interface AuthContextType {
   firebaseUser: FirebaseUser | null;
   userProfile: UserProfile | null;
   loading: boolean;
+  profileLoadTimedOut: boolean;
+  retryProfileLoad: () => Promise<void>;
   selectedRole: UserRole | null;
   theme: 'light' | 'dark';
   setSelectedRole: (role: UserRole | null) => void;
@@ -47,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [profileLoadTimedOut, setProfileLoadTimedOut] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
 
@@ -80,22 +83,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Auth listener & live user profile subscription
   useEffect(() => {
     let unsubscribeProfile: (() => void) | null = null;
+    let profileTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Safety timeout to ensure app never hangs on "Loading user profile attributes..."
+    // Safety timeout to ensure app never hangs on "Loading AttendEase system..."
     const safetyTimer = setTimeout(() => {
       setLoading(false);
     }, 2000);
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
+      setProfileLoadTimedOut(false);
+      if (profileTimer) clearTimeout(profileTimer);
+
       if (user) {
         if (unsubscribeProfile) unsubscribeProfile();
+
+        // If the profile doc doesn't show up within 10s (dropped write during
+        // signup, flaky connection, tab backgrounded mid-request, etc.), stop
+        // spinning forever on "Loading user profile attributes..." and let
+        // the person retry instead.
+        profileTimer = setTimeout(() => {
+          setProfileLoadTimedOut(true);
+        }, 10000);
+
         unsubscribeProfile = subscribeUserProfile(user.uid, (profile) => {
           if (profile) {
             setUserProfile(profile);
             if (profile.role) {
               setSelectedRole(profile.role);
             }
+            setProfileLoadTimedOut(false);
+            if (profileTimer) clearTimeout(profileTimer);
           }
           setLoading(false);
           clearTimeout(safetyTimer);
@@ -113,10 +131,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => {
       clearTimeout(safetyTimer);
+      if (profileTimer) clearTimeout(profileTimer);
       unsubscribeAuth();
       if (unsubscribeProfile) unsubscribeProfile();
     };
   }, []);
+
+  // Manual retry for when the profile never loaded in time. Re-checks
+  // Firestore directly (bypassing the live listener) in case it silently
+  // dropped, and surfaces a clear failure state if there's still nothing.
+  const retryProfileLoad = async () => {
+    if (!firebaseUser) return;
+    setProfileLoadTimedOut(false);
+    try {
+      const profileSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
+      if (profileSnap.exists()) {
+        const profile = profileSnap.data() as UserProfile;
+        setUserProfile(profile);
+        if (profile.role) {
+          setSelectedRole(profile.role);
+        }
+      } else {
+        setProfileLoadTimedOut(true);
+      }
+    } catch (err) {
+      console.error('Retry profile load failed:', err);
+      setProfileLoadTimedOut(true);
+    }
+  };
 
   const login = async (userCode: string, password: string, role: UserRole) => {
     const cleanCode = userCode.trim().toUpperCase();
@@ -428,6 +470,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       firebaseUser,
       userProfile,
       loading,
+      profileLoadTimedOut,
+      retryProfileLoad,
       selectedRole,
       theme,
       setSelectedRole,
