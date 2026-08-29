@@ -309,8 +309,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         departmentOrLocation: data.departmentOrLocation.trim() || 'Main Campus',
         subjectsTaught: data.subjectsTaught || [],
         createdAt: new Date().toISOString(),
-        approvedBy: initialStatus === 'approved' ? 'System Initial Bootstrap' : undefined,
-        approvedAt: initialStatus === 'approved' ? new Date().toISOString() : undefined
+        // Firestore rejects `undefined` field values outright, so only include
+        // approvedBy/approvedAt when there's an actual value to write.
+        ...(initialStatus === 'approved'
+          ? {
+              approvedBy: 'System Initial Bootstrap',
+              approvedAt: new Date().toISOString()
+            }
+          : {})
       };
 
       await setDoc(doc(db, 'users', credential.user.uid), newProfile);
