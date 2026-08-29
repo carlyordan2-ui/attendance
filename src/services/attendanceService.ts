@@ -63,7 +63,11 @@ export async function logActivity(
 }
 
 // Real-time listener for current user's profile
-export function subscribeUserProfile(uid: string, callback: (profile: UserProfile | null) => void) {
+export function subscribeUserProfile(
+  uid: string,
+  callback: (profile: UserProfile | null) => void,
+  onError?: (err: any) => void
+) {
   const docRef = doc(db, 'users', uid);
   return onSnapshot(docRef, (snapshot) => {
     if (snapshot.exists()) {
@@ -73,6 +77,7 @@ export function subscribeUserProfile(uid: string, callback: (profile: UserProfil
     }
   }, (err) => {
     console.error('Error listening to user profile:', err);
+    if (onError) onError(err);
     callback(null);
   });
 }
