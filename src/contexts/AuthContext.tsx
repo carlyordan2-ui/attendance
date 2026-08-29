@@ -22,6 +22,7 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   loading: boolean;
   profileLoadTimedOut: boolean;
+  profileLoadErrorDetail: string | null;
   retryProfileLoad: () => Promise<void>;
   selectedRole: UserRole | null;
   theme: 'light' | 'dark';
@@ -50,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [profileLoadTimedOut, setProfileLoadTimedOut] = useState<boolean>(false);
+  const [profileLoadErrorDetail, setProfileLoadErrorDetail] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
 
@@ -93,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
       setProfileLoadTimedOut(false);
+      setProfileLoadErrorDetail(null);
       if (profileTimer) clearTimeout(profileTimer);
 
       if (user) {
@@ -106,18 +109,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setProfileLoadTimedOut(true);
         }, 10000);
 
-        unsubscribeProfile = subscribeUserProfile(user.uid, (profile) => {
-          if (profile) {
-            setUserProfile(profile);
-            if (profile.role) {
-              setSelectedRole(profile.role);
+        unsubscribeProfile = subscribeUserProfile(
+          user.uid,
+          (profile) => {
+            if (profile) {
+              setUserProfile(profile);
+              if (profile.role) {
+                setSelectedRole(profile.role);
+              }
+              setProfileLoadTimedOut(false);
+              setProfileLoadErrorDetail(null);
+              if (profileTimer) clearTimeout(profileTimer);
             }
-            setProfileLoadTimedOut(false);
-            if (profileTimer) clearTimeout(profileTimer);
+            setLoading(false);
+            clearTimeout(safetyTimer);
+          },
+          (err) => {
+            setProfileLoadErrorDetail(err?.code ? `${err.code}: ${err.message}` : String(err?.message || err));
           }
-          setLoading(false);
-          clearTimeout(safetyTimer);
-        });
+        );
       } else {
         setUserProfile(null);
         if (unsubscribeProfile) {
@@ -143,6 +153,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const retryProfileLoad = async () => {
     if (!firebaseUser) return;
     setProfileLoadTimedOut(false);
+    setProfileLoadErrorDetail(null);
     try {
       const profileSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
       if (profileSnap.exists()) {
@@ -153,10 +164,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } else {
         setProfileLoadTimedOut(true);
+        setProfileLoadErrorDetail(`No document found at users/${firebaseUser.uid}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Retry profile load failed:', err);
       setProfileLoadTimedOut(true);
+      setProfileLoadErrorDetail(err?.code ? `${err.code}: ${err.message}` : String(err?.message || err));
     }
   };
 
@@ -471,6 +484,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       userProfile,
       loading,
       profileLoadTimedOut,
+      profileLoadErrorDetail,
       retryProfileLoad,
       selectedRole,
       theme,
