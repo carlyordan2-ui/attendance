@@ -73,21 +73,21 @@ export const StudentProfileTab: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] uppercase text-slate-400 block">Student ID</span>
-              <span className="font-mono font-bold text-slate-900 dark:text-white">{userProfile.userCode}</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-white break-all">{userProfile.userCode}</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] uppercase text-slate-400 block">System Role</span>
               <span className="font-bold text-indigo-600 dark:text-indigo-400 capitalize">{userProfile.role}</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] uppercase text-slate-400 block">Account Status</span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400 capitalize">{userProfile.status}</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] uppercase text-slate-400 block">Approved By</span>
-              <span className="text-slate-700 dark:text-slate-300">{userProfile.approvedBy || 'System'}</span>
+              <span className="text-slate-700 dark:text-slate-300 break-all">{userProfile.approvedBy || 'System'}</span>
             </div>
           </div>
         </div>
