@@ -1,6 +1,6 @@
 export type UserRole = 'student' | 'teacher';
 export type UserStatus = 'pending' | 'approved' | 'rejected';
-export type AttendanceStatus = 'present' | 'late' | 'absent';
+export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';
 
 export interface UserProfile {
   uid: string;
@@ -16,6 +16,15 @@ export interface UserProfile {
   approvedBy?: string; // Teacher UID/Name who approved this user
   approvedAt?: string;
   rejectedReason?: string;
+  avatar?: string; // Preset emoji/icon identifier
+  bio?: string;
+  officeHours?: string;
+  phone?: string;
+  socialLinks?: {
+    website?: string;
+    linkedin?: string;
+    twitter?: string;
+  };
 }
 
 export interface Subject {
@@ -26,6 +35,12 @@ export interface Subject {
   teacherName: string;
   schedule: string; // e.g. Mon/Wed 09:00 AM - 10:30 AM
   room: string; // e.g. Lab 3, Hall B
+  term?: string; // e.g. "Fall 2026", "Spring 2027", "Summer 2026"
+  meetUrl?: string; // Persistent Google Meet link
+  activeSessionCode?: string; // Classroom PIN (e.g. "4920") for live in-person verification
+  activeSessionExpiresAt?: string; // ISO String when the PIN expires
+  isSessionOpen?: boolean; // When true, students can check in using the PIN
+  blockedStudentIds?: string[]; // Students blocked from re-enrolling
   createdAt: string;
 }
 
@@ -58,6 +73,27 @@ export interface AttendanceRecord {
   markedBy: 'student' | 'teacher';
   markedByName: string;
   markedById: string;
+  sessionCodeVerified?: boolean;
+}
+
+export interface AttendanceCorrectionRequest {
+  id: string;
+  attendanceRecordId?: string;
+  studentId: string;
+  studentName: string;
+  studentUserCode: string;
+  subjectId: string;
+  subjectCode: string;
+  subjectName: string;
+  teacherId: string;
+  date: string;
+  currentStatus: AttendanceStatus;
+  requestedStatus: AttendanceStatus;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  teacherNote?: string;
+  createdAt: string;
+  resolvedAt?: string;
 }
 
 export type ActivityType = 
@@ -67,12 +103,17 @@ export type ActivityType =
   | 'account_approval'
   | 'account_rejection'
   | 'attendance_checkin'
+  | 'self_check_in'
   | 'attendance_override'
   | 'enrollment_request'
   | 'enrollment_action'
   | 'subject_created'
   | 'student_created_by_teacher'
-  | 'suspicious_activity';
+  | 'suspicious_activity'
+  | 'session_code_generated'
+  | 'attendance_correction_requested'
+  | 'attendance_correction_resolved'
+  | 'bulk_roster_imported';
 
 export interface ActivityLog {
   id: string;
@@ -94,6 +135,8 @@ export interface AttendanceStats {
   percentage: number;
 }
 
+export type AnnouncementAudience = 'all' | 'students_only' | 'teachers_only';
+
 export interface Announcement {
   id: string;
   title: string;
@@ -104,6 +147,12 @@ export interface Announcement {
   subjectCode: string;
   subjectName: string;
   isPinned?: boolean;
+  targetAudience?: AnnouncementAudience;
+  attachmentUrl?: string;
+  attachmentName?: string;
+  attachmentSize?: number;
+  attachmentType?: string;
+  meetUrl?: string;
   createdAt: string;
 }
 
@@ -113,7 +162,10 @@ export interface AnnouncementComment {
   authorId: string;
   authorName: string;
   authorRole: UserRole;
+  authorAvatar?: string;
   content: string;
+  commentType?: 'public' | 'private';
+  recipientStudentId?: string;
   createdAt: string;
 }
 
@@ -131,6 +183,10 @@ export interface Assignment {
   teacherName: string;
   dueDate: string; // e.g. "2026-08-01" or ISO
   points: number;
+  attachmentUrl?: string;
+  attachmentName?: string;
+  attachmentSize?: number;
+  attachmentType?: string;
   createdAt: string;
 }
 
@@ -144,10 +200,36 @@ export interface Submission {
   studentUserCode: string;
   subjectId: string;
   content: string; // Submitted text, link, or notes
+  attachmentUrl?: string;
+  attachmentName?: string;
+  attachmentSize?: number;
+  attachmentType?: string;
   submittedAt: string;
   status: SubmissionStatus;
   grade?: number; // e.g. 95
   feedback?: string;
   gradedAt?: string;
   gradedByName?: string;
+}
+
+export interface DirectMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderRole?: UserRole;
+  recipientId: string;
+  recipientName: string;
+  message: string;
+  attachmentUrl?: string;
+  attachmentName?: string;
+  attachmentSize?: number;
+  attachmentType?: string;
+  read: boolean;
+  readAt?: string;
+  timestamp: string;
+  // Aliases for compatibility
+  receiverId?: string;
+  content?: string;
+  isRead?: boolean;
+  createdAt?: string;
 }

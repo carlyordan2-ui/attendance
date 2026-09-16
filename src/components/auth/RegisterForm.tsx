@@ -6,12 +6,13 @@ import {
   User, 
   UserPlus, 
   GraduationCap, 
-  UserCheck, 
+  ShieldCheck, 
   AlertCircle,
   Mail,
   MapPin,
   CheckCircle2,
-  ArrowLeft
+  Compass,
+  ArrowRight
 } from 'lucide-react';
 
 interface RegisterFormProps {
@@ -94,154 +95,165 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto my-2 sm:my-6 px-1 sm:px-4">
+    <div className="w-full max-w-xl mx-auto my-4 sm:my-8 px-2 sm:px-4">
       
       {/* Header */}
-      <div className="text-center mb-4 sm:mb-6 space-y-1">
-        <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Create an Account
+      <div className="text-center mb-6 sm:mb-8 space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+          Create Account
         </h1>
-        <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-          Apply for a student or teacher profile on AttendEase
+        <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 max-w-md mx-auto font-sans">
+          Register as a student or teacher to get started.
         </p>
       </div>
 
-      {/* Form Card */}
-      <div className="soft-card p-4 sm:p-8 shadow-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl">
+      {/* Main Form Plate */}
+      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-xl shadow-stone-900/5 dark:shadow-black/40 backdrop-blur-sm folio-card">
         
+        {/* Subtle Corner Registration Marks */}
+        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+
         {/* Segmented Pill Role Toggle */}
-        <div className="mb-6 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/80 dark:border-slate-700/80 flex items-center">
+        <div className="mb-6 bg-stone-100/90 dark:bg-stone-900/90 p-1.5 rounded-2xl border border-stone-200/90 dark:border-stone-800 flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => onRoleChange('student')}
-            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               !isTeacher
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
             }`}
           >
             <GraduationCap className="h-4 w-4 shrink-0" />
-            <span>Student Registration</span>
+            <span className="tracking-wide">Student</span>
           </button>
           
           <button
             type="button"
             onClick={() => onRoleChange('teacher')}
-            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               isTeacher
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
             }`}
           >
-            <UserCheck className="h-4 w-4 shrink-0" />
-            <span>Teacher Registration</span>
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            <span className="tracking-wide">Teacher</span>
           </button>
         </div>
 
-        {/* Info Box about Teacher Approval */}
-        <div className="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-amber-900 dark:text-amber-200 text-xs flex items-start space-x-2.5">
-          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-amber-500" />
-          <div className="leading-relaxed">
-            <strong>Approval Notice:</strong> Self-registered {role}s start in <em>Pending Approval</em> status until verified by a Faculty Teacher.
+        {/* Notice Box */}
+        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs flex items-start space-x-3">
+          <Compass className="h-4 w-4 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
+          <div className="leading-relaxed font-sans">
+            <strong className="font-heading uppercase tracking-wider text-[11px] block">Notice:</strong>
+            New {role} accounts require teacher approval before logging in.
           </div>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-2.5">
+          <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-3">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600" />
-            <div className="leading-relaxed">{error}</div>
+            <div className="leading-relaxed font-sans">{error}</div>
           </div>
         )}
 
         {/* Register Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* User ID Field */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-              {isTeacher ? 'Teacher ID' : 'Student ID'} <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <User className="h-4 w-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* User ID Field */}
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+                {isTeacher ? 'Faculty ID' : 'Student ID'} <span className="text-rose-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                  <User className="h-4 w-4" />
+                </div>
+                <input
+                  type="text"
+                  required
+                  id="register-user-code-input"
+                  value={userCode}
+                  onChange={(e) => setUserCode(e.target.value)}
+                  placeholder={isTeacher ? 'e.g. T-2001' : 'e.g. S-10045'}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono"
+                />
               </div>
+            </div>
+
+            {/* Full Name */}
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+                Legal Full Name <span className="text-rose-500">*</span>
+              </label>
               <input
                 type="text"
                 required
-                id="register-user-code-input"
-                value={userCode}
-                onChange={(e) => setUserCode(e.target.value)}
-                placeholder={isTeacher ? 'e.g. T-2001' : 'e.g. S-10045'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+                id="register-name-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Eleanor Vance"
+                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
               />
             </div>
           </div>
 
-          {/* Full Name */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-              Full Name <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              id="register-name-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Marcus Vance"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-              Password <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock className="h-4 w-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Password */}
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+                Access Password <span className="text-rose-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                  <Lock className="h-4 w-4" />
+                </div>
+                <input
+                  type="password"
+                  required
+                  id="register-password-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min. 6 characters"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-wider"
+                />
               </div>
-              <input
-                type="password"
-                required
-                id="register-password-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-              />
             </div>
-          </div>
 
-          {/* Contact Email (Optional) */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-              Contact Email <span className="text-slate-400 font-normal">(Optional)</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Mail className="h-4 w-4" />
+            {/* Contact Email (Optional) */}
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+                Contact Email <span className="text-stone-400 font-normal">(Optional)</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                  <Mail className="h-4 w-4" />
+                </div>
+                <input
+                  type="email"
+                  id="register-contact-email-input"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  placeholder="name@institute.edu"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                />
               </div>
-              <input
-                type="email"
-                id="register-contact-email-input"
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                placeholder="e.g. user@example.com"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-              />
             </div>
           </div>
 
           {/* Department or Location */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-              {isTeacher ? 'Department / Building' : 'Grade Level / Section'}
+            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+              {isTeacher ? 'Academic Department & Office' : 'Cohort / Grade Level & Section'}
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
                 <MapPin className="h-4 w-4" />
               </div>
               <input
@@ -249,17 +261,17 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 id="register-dept-input"
                 value={departmentOrLocation}
                 onChange={(e) => setDepartmentOrLocation(e.target.value)}
-                placeholder={isTeacher ? 'e.g. Science Building - Room 302' : 'e.g. Year 10 - Section A'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                placeholder={isTeacher ? 'e.g. Science Building - Hall 302' : 'e.g. Class 10 - Section B'}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
               />
             </div>
           </div>
 
           {/* If Teacher: Subjects Taught */}
           {isTeacher && (
-            <div className="pt-1 space-y-2.5">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Subjects You Teach <span className="text-rose-500">*</span>
+            <div className="pt-2 space-y-2.5 border-t border-stone-200 dark:border-stone-800">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
+                Subjects Instructed <span className="text-rose-500">*</span>
               </label>
 
               {/* Type Custom Subject Input Box */}
@@ -275,24 +287,20 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                       handleAddCustomSubject();
                     }
                   }}
-                  placeholder="Type a subject name (e.g. Biology, AP History)..."
-                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  placeholder="Enter custom discipline (e.g. Quantum Physics)..."
+                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={handleAddCustomSubject}
                   id="add-custom-subject-btn"
-                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shrink-0 transition-colors shadow-sm"
+                  className="px-4 py-2.5 rounded-xl bg-stone-900 dark:bg-amber-500 hover:bg-stone-800 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs shrink-0 transition-colors shadow-sm cursor-pointer"
                 >
-                  + Add Subject
+                  + Add
                 </button>
               </div>
 
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Type your subject above or click to select from popular subjects:
-              </p>
-
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {subjectOptions.map((sub) => {
                   const isSel = selectedSubjects.includes(sub);
                   return (
@@ -300,10 +308,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                       type="button"
                       key={sub}
                       onClick={() => toggleSubject(sub)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 border ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all flex items-center space-x-1 border cursor-pointer ${
                         isSel
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700'
+                          ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-sm'
+                          : 'bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:border-amber-500/40'
                       }`}
                     >
                       {isSel && <CheckCircle2 className="h-3 w-3 mr-1 shrink-0" />}
@@ -314,26 +322,27 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               </div>
 
               {selectedSubjects.length === 0 && (
-                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
-                  Please type or select at least one subject.
+                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-mono">
+                  * Select or register at least one instructional subject.
                 </p>
               )}
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Submit Action Button */}
           <button
             type="submit"
             disabled={isSubmitting}
             id="register-submit-btn"
-            className="w-full py-3 px-4 mt-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+            className="w-full py-3.5 px-5 mt-4 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-gradient-to-r dark:from-amber-500 dark:to-amber-600 dark:hover:from-amber-400 dark:hover:to-amber-500 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-stone-900/10 dark:shadow-amber-500/20 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
             ) : (
               <>
                 <UserPlus className="h-4 w-4" />
-                <span>Submit {isTeacher ? 'Teacher' : 'Student'} Registration</span>
+                <span>Create Account</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
               </>
             )}
           </button>
@@ -341,15 +350,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         </form>
 
         {/* Switch to Login */}
-        <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-slate-800 text-center">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-8 pt-5 border-t border-stone-200 dark:border-stone-800 text-center">
+          <p className="text-xs text-stone-500 dark:text-stone-400">
             Already have an account?{' '}
             <button
               onClick={onSwitchToLogin}
               id="switch-to-login-btn"
-              className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              className="font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
             >
-              Sign In to Your Account
+              Sign in here →
             </button>
           </p>
         </div>
@@ -358,4 +367,3 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
   );
 };
-

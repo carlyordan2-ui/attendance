@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { updateUserProfile } from '../../services/attendanceService';
+import { AVATAR_PRESETS, getAvatarPreset } from '../../utils/avatars';
+import { AvatarDisplay } from '../common/AvatarDisplay';
 import { 
   User, 
   Mail, 
@@ -9,7 +11,8 @@ import {
   Save, 
   CheckCircle2, 
   Lock,
-  GraduationCap
+  GraduationCap,
+  FileText
 } from 'lucide-react';
 
 export const StudentProfileTab: React.FC = () => {
@@ -18,6 +21,8 @@ export const StudentProfileTab: React.FC = () => {
   const [name, setName] = useState(userProfile?.name || '');
   const [email, setEmail] = useState(userProfile?.email || '');
   const [departmentOrLocation, setDepartmentOrLocation] = useState(userProfile?.departmentOrLocation || '');
+  const [bio, setBio] = useState(userProfile?.bio || '');
+  const [selectedAvatar, setSelectedAvatar] = useState(userProfile?.avatar || 'grad');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!userProfile) return null;
@@ -31,9 +36,11 @@ export const StudentProfileTab: React.FC = () => {
       await updateUserProfile(userProfile.uid, {
         name: name.trim(),
         email: email.trim(),
-        departmentOrLocation: departmentOrLocation.trim()
+        departmentOrLocation: departmentOrLocation.trim(),
+        bio: bio.trim(),
+        avatar: selectedAvatar
       });
-      showToast('Profile updated successfully!', 'success');
+      showToast('Profile and avatar updated successfully!', 'success');
     } catch (err: any) {
       showToast(err.message || 'Failed to update profile.', 'error');
     } finally {
@@ -46,17 +53,15 @@ export const StudentProfileTab: React.FC = () => {
       
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
         
-        {/* Header */}
+        {/* Header with Live Avatar */}
         <div className="flex items-center space-x-4 border-b border-slate-100 dark:border-slate-800 pb-6">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-extrabold text-2xl flex items-center justify-center border border-indigo-200 dark:border-indigo-800">
-            {userProfile.name.charAt(0).toUpperCase()}
-          </div>
+          <AvatarDisplay avatarId={selectedAvatar} name={name} size="lg" />
           <div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">
               Student Profile Management
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Manage your contact info and personal student details
+              Personalize your avatar, contact info, and academic presence
             </p>
           </div>
         </div>
@@ -93,8 +98,50 @@ export const StudentProfileTab: React.FC = () => {
         </div>
 
         {/* Editable Form */}
-        <form onSubmit={handleSaveProfile} className="space-y-4">
+        <form onSubmit={handleSaveProfile} className="space-y-5">
           
+          {/* Avatar Selector */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center justify-between">
+              <span className="flex items-center space-x-1.5">
+                <span>Choose Your Avatar</span>
+              </span>
+              <span className="text-[11px] font-normal text-slate-400">
+                {getAvatarPreset(selectedAvatar).label}
+              </span>
+            </label>
+
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
+              {AVATAR_PRESETS.map((preset) => {
+                const isSelected = selectedAvatar === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => setSelectedAvatar(preset.id)}
+                    className={`flex flex-col items-center p-2 rounded-xl transition-all relative ${
+                      isSelected
+                        ? 'ring-2 ring-indigo-500 bg-indigo-50/80 dark:bg-indigo-950/80'
+                        : 'hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-2xl bg-gradient-to-tr ${preset.bgGradient} flex items-center justify-center text-xl shadow-xs`}>
+                      {preset.emoji}
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 mt-1 truncate max-w-full">
+                      {preset.label}
+                    </span>
+                    {isSelected && (
+                      <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-indigo-600 rounded-full flex items-center justify-center text-white text-[8px]">
+                        ✓
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Full Name */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
@@ -148,6 +195,22 @@ export const StudentProfileTab: React.FC = () => {
                 onChange={(e) => setDepartmentOrLocation(e.target.value)}
                 placeholder="e.g. Year 10 - Section B"
                 className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+              Personal Bio / Academic Interests
+            </label>
+            <div className="relative">
+              <textarea
+                rows={2}
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="e.g. Aspiring software engineer interested in robotics and web development."
+                className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
           </div>

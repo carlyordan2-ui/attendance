@@ -1,39 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Subject, Enrollment, AttendanceRecord, UserProfile } from '../../types';
+import { Subject, AttendanceRecord, Enrollment, UserProfile } from '../../types';
 import { 
   subscribeSubjects, 
-  subscribeAllEnrollments, 
+  subscribeStudentEnrollments, 
   subscribeAllAttendance, 
-  subscribeAllUsers 
+  blockStudentFromSubject, 
+  unblockStudentFromSubject, 
+  subscribeAllUsers,
+  bulkImportRosterToSubject
 } from '../../services/attendanceService';
+import { useAuth } from '../../contexts/AuthContext';
+import { AvatarDisplay } from '../common/AvatarDisplay';
 import { 
   Users, 
-  BookOpen, 
-  Award, 
-  CheckCircle2, 
-  Clock, 
-  XCircle, 
-  BarChart2, 
-  GraduationCap 
+  MessageSquare, 
+  UserX, 
+  Unlock, 
+  ShieldAlert,
+  Video,
+  UserPlus,
+  Upload,
+  Download,
+  Search,
+  CheckCircle2,
+  FileSpreadsheet,
+  X,
+  AlertCircle
 } from 'lucide-react';
 
-export const RosterAndStatsTab: React.FC = () => {
+interface RosterAndStatsTabProps {
+  onStartDirectMessage?: (studentId: string, studentName: string) => void;
+}
+
+export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDirectMessage }) => {
+  const { userProfile, showToast } = useAuth();
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('');
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
   const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
+  const [isProcessingBlock, setIsProcessingBlock] = useState<boolean>(false);
+  const [rosterSearch, setRosterSearch] = useState<string>('');
 
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('all');
+  // Bulk Import Modal State
+  const [showImportModal, setShowImportModal] = useState<boolean>(false);
+  const [rawImportText, setRawImportText] = useState<string>('');
+  const [isImporting, setIsImporting] = useState<boolean>(false);
 
   useEffect(() => {
-    const unSubSub = subscribeSubjects((subs) => {
+    const unsubscribeSubjects = subscribeSubjects((subs) => {
       setSubjects(subs);
-      if (subs.length > 0 && selectedSubjectId === 'all') {
+      if (subs.length > 0 && !selectedSubjectId) {
         setSelectedSubjectId(subs[0].id);
       }
     });
 
-    const unSubEnr = subscribeAllEnrollments((enrs) => {
+    return () => unsubscribeSubjects();
+  }, [selectedSubjectId]);
+
+  useEffect(() => {
+    if (!selectedSubjectId) return;
+
+    const unSubSub = subscribeSubjects(setSubjects);
+    const unSubEnr = subscribeStudentEnrollments('', (enrs) => {
       setEnrollments(enrs.filter(e => e.status === 'approved'));
     });
 
@@ -46,7 +75,7 @@ export const RosterAndStatsTab: React.FC = () => {
       unSubAtt();
       unSubUsers();
     };
-  }, []);
+  }, [selectedSubjectId]);
 
   const currentSubject = subjects.find(s => s.id === selectedSubjectId) || subjects[0];
 
@@ -59,10 +88,20 @@ export const RosterAndStatsTab: React.FC = () => {
         studentId: e.studentId,
         studentName: e.studentName,
         studentUserCode: e.studentUserCode,
+        avatar: profile?.avatar,
         location: profile?.departmentOrLocation || 'Main Campus',
         email: profile?.email || ''
       };
     });
+
+  // Filtered by search
+  const filteredRoster = enrolledStudentsForSubject.filter(st => {
+    if (!rosterSearch) return true;
+    const q = rosterSearch.toLowerCase();
+    return st.studentName.toLowerCase().includes(q) || 
+           st.studentUserCode.toLowerCase().includes(q) ||
+           st.location.toLowerCase().includes(q);
+  });
 
   // Helper to calculate student stats in subject
   const getStudentSubjectStats = (studentId: string, subjectId: string) => {
@@ -70,13 +109,137 @@ export const RosterAndStatsTab: React.FC = () => {
     const total = recs.length;
     const present = recs.filter(r => r.status === 'present').length;
     const late = recs.filter(r => r.status === 'late').length;
+    const excused = recs.filter(r => r.status === 'excused').length;
     const absent = recs.filter(r => r.status === 'absent').length;
-    const percentage = total > 0 ? Math.round(((present + late) / total) * 100) : 100;
+    
+    const countable = total - excused;
+    const percentage = countable > 0 ? Math.round(((present + late) / countable) * 100) : 100;
 
-    return { total, present, late, absent, percentage };
+    return { total, present, late, excused, absent, percentage };
   };
 
-  // Average subject attendance %
+  const handleBlockStudent = async (studentId: string, studentName: string) => {
+    if (!currentSubject) return;
+    if (window.confirm(`Remove and block ${studentName} from ${currentSubject.code}?`)) {
+      setIsProcessingBlock(true);
+      try {
+        await blockStudentFromSubject(currentSubject.id, studentId);
+        showToast(`Blocked ${studentName} from ${currentSubject.code}`, 'info');
+      } catch (err: any) {
+        showToast(err.message || 'Failed to block student', 'error');
+      } finally {
+        setIsProcessingBlock(false);
+      }
+    }
+  };
+
+  const handleUnblockStudent = async (studentId: string) => {
+    if (!currentSubject) return;
+    setIsProcessingBlock(true);
+    try {
+      await unblockStudentFromSubject(currentSubject.id, studentId);
+      showToast('Student unblocked successfully', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Failed to unblock student', 'error');
+    } finally {
+      setIsProcessingBlock(false);
+    }
+  };
+
+  // Bulk Roster Import Handler
+  const handleBulkImport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentSubject || !rawImportText.trim() || !userProfile) return;
+
+    setIsImporting(true);
+    try {
+      // Lines can be: "ID, Name" or "Name, ID" or just "ID"
+      const lines = rawImportText.split('\n').map(l => l.trim()).filter(Boolean);
+      const studentRows: Array<{ name: string; userCode: string; email?: string }> = [];
+
+      for (const line of lines) {
+        // Skip header lines like "ID,Name"
+        if (line.toLowerCase().startsWith('id') || line.toLowerCase().startsWith('student')) continue;
+
+        const parts = line.split(/[,\t;|]/).map(p => p.trim().replace(/^["']|["']$/g, ''));
+        if (parts.length >= 2) {
+          studentRows.push({
+            userCode: parts[0],
+            name: parts[1]
+          });
+        } else if (parts.length === 1 && parts[0]) {
+          studentRows.push({
+            userCode: parts[0],
+            name: `Student ${parts[0]}`
+          });
+        }
+      }
+
+      if (studentRows.length === 0) {
+        showToast('No valid student entries found in input.', 'error');
+        return;
+      }
+
+      const result = await bulkImportRosterToSubject(
+        currentSubject,
+        studentRows,
+        { uid: userProfile.uid, name: userProfile.name }
+      );
+
+      showToast(`Roster updated: ${result.added} enrolled, ${result.existing} already existed in ${currentSubject.code}.`, 'success');
+      setShowImportModal(false);
+      setRawImportText('');
+    } catch (err: any) {
+      showToast(err.message || 'Failed to import roster.', 'error');
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        setRawImportText(text);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Export Roster CSV
+  const handleExportRosterCSV = () => {
+    if (!currentSubject || enrolledStudentsForSubject.length === 0) return;
+
+    const headers = ['Student ID', 'Student Name', 'Section / Campus', 'Attendance Rate', 'Present', 'Late', 'Excused', 'Absent', 'Total Records'];
+    const rows = enrolledStudentsForSubject.map(st => {
+      const s = getStudentSubjectStats(st.studentId, currentSubject.id);
+      return [
+        `"${st.studentUserCode}"`,
+        `"${st.studentName}"`,
+        `"${st.location}"`,
+        `"${s.percentage}%"`,
+        s.present,
+        s.late,
+        s.excused,
+        s.absent,
+        s.total
+      ];
+    });
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `${currentSubject.code}_Roster_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalRosterCount = enrolledStudentsForSubject.length;
   const avgAttendancePct = totalRosterCount > 0
     ? Math.round(
@@ -86,122 +249,190 @@ export const RosterAndStatsTab: React.FC = () => {
       )
     : 100;
 
+  // Blocked students in current subject
+  const blockedStudentProfiles = (currentSubject?.blockedStudentIds || [])
+    .filter(Boolean)
+    .map(uid => {
+      const user = allUsers.find(u => u.uid === uid);
+      return {
+        uid,
+        name: user?.name || `Student (${String(uid).slice(0, 6)})`,
+        userCode: user?.userCode || 'N/A',
+        avatar: user?.avatar
+      };
+    });
+
   return (
     <div className="space-y-6">
       
       {/* Header & Subject Selector */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-              <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-              <span>Subject Class Roster & Attendance Stats</span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Live student roster and attendance percentage breakdowns
-            </p>
+          <div className="flex items-center space-x-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+              <Users className="h-6 w-6 stroke-[1.75]" />
+            </div>
+            <div>
+              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+                Class Roster & Analytics
+              </h2>
+              <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
+                Manage enrolled students, bulk CSV rosters, and individual performance.
+              </p>
+            </div>
           </div>
 
-          {/* Dropdown */}
-          <div className="w-full sm:w-72">
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-              Select Subject
-            </label>
-            <select
-              value={selectedSubjectId}
-              onChange={(e) => setSelectedSubjectId(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => setShowImportModal(true)}
+              id="bulk-import-roster-btn"
+              className="px-3.5 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-heading font-bold text-xs transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer"
             >
-              {subjects.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.code} - {s.name}
-                </option>
-              ))}
-            </select>
+              <UserPlus className="h-3.5 w-3.5" />
+              <span>Bulk Import Roster</span>
+            </button>
+
+            <button
+              onClick={handleExportRosterCSV}
+              id="export-roster-csv-btn"
+              disabled={enrolledStudentsForSubject.length === 0}
+              className="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer disabled:opacity-50"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>Export Roster CSV</span>
+            </button>
           </div>
         </div>
 
         {/* Current Subject Info Card */}
         {currentSubject && (
-          <div className="bg-emerald-50 dark:bg-emerald-950/40 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 flex flex-wrap items-center justify-between gap-4 text-xs">
-            <div>
-              <span className="font-mono font-bold text-emerald-800 dark:text-emerald-300 text-sm">
-                {currentSubject.code} • {currentSubject.name}
-              </span>
-              <p className="text-emerald-700 dark:text-emerald-400 text-[11px] mt-0.5">
-                Schedule: {currentSubject.schedule} | Room: {currentSubject.room} | Faculty: {currentSubject.teacherName}
+          <div className="bg-stone-50 dark:bg-stone-900/80 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4 text-xs font-sans">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <span className="font-heading font-bold text-stone-900 dark:text-white text-sm">
+                  {currentSubject.code} • {currentSubject.name}
+                </span>
+                {currentSubject.meetUrl && (
+                  <a
+                    href={currentSubject.meetUrl.startsWith('http') ? currentSubject.meetUrl : `https://${currentSubject.meetUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-heading font-bold text-xs transition-colors"
+                  >
+                    <Video className="h-3.5 w-3.5 text-amber-600" />
+                    <span>Join Meeting</span>
+                  </a>
+                )}
+              </div>
+              <p className="text-stone-500 text-[11px]">
+                {currentSubject.schedule} | {currentSubject.room} | {currentSubject.teacherName}
               </p>
             </div>
 
             <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <span className="text-xs text-emerald-700 dark:text-emerald-400 uppercase font-bold block">Enrolled Students</span>
-                <span className="text-xl font-black text-emerald-900 dark:text-emerald-100">{totalRosterCount}</span>
+              <div className="w-48">
+                <select
+                  value={selectedSubjectId}
+                  onChange={(e) => setSelectedSubjectId(e.target.value)}
+                  className="w-full px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+                >
+                  {subjects.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.code} - {s.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="text-right pl-4 border-l border-emerald-200 dark:border-emerald-900">
-                <span className="text-xs text-emerald-700 dark:text-emerald-400 uppercase font-bold block">Average Attendance</span>
-                <span className="text-xl font-black text-emerald-900 dark:text-emerald-100">{avgAttendancePct}%</span>
+
+              <div className="text-right">
+                <span className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider block">Enrolled</span>
+                <span className="text-xl font-heading font-bold text-stone-900 dark:text-white">{totalRosterCount}</span>
+              </div>
+              <div className="text-right pl-4 border-l border-stone-200 dark:border-stone-800">
+                <span className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider block">Average Rate</span>
+                <span className="text-xl font-heading font-bold text-stone-900 dark:text-white">{avgAttendancePct}%</span>
               </div>
             </div>
           </div>
         )}
+
+        {/* Search Bar */}
+        <div className="pt-2">
+          <div className="relative max-w-sm">
+            <Search className="h-3.5 w-3.5 absolute left-3 top-3 text-stone-400" />
+            <input
+              type="text"
+              value={rosterSearch}
+              onChange={(e) => setRosterSearch(e.target.value)}
+              placeholder="Search enrolled students by name or ID..."
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Roster Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-sm folio-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+            <thead className="bg-stone-50 dark:bg-stone-900/80 text-stone-500 dark:text-stone-400 font-mono text-[10px] uppercase tracking-wider border-b border-stone-200 dark:border-stone-800">
               <tr>
-                <th className="px-6 py-4">Student ID & Name</th>
-                <th className="px-6 py-4">Location / Section</th>
-                <th className="px-6 py-4">Attendance Rate (%)</th>
+                <th className="px-6 py-4">Student</th>
+                <th className="px-6 py-4">Campus / Section</th>
+                <th className="px-6 py-4">Attendance Rate</th>
                 <th className="px-6 py-4">Present</th>
                 <th className="px-6 py-4">Late</th>
+                <th className="px-6 py-4">Excused</th>
                 <th className="px-6 py-4">Absent</th>
-                <th className="px-6 py-4">Total Sessions</th>
+                <th className="px-6 py-4">Total</th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {enrolledStudentsForSubject.length === 0 ? (
+            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+              {filteredRoster.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
-                    No students currently enrolled in this subject.
+                  <td colSpan={9} className="px-6 py-8 text-center text-stone-500 font-sans">
+                    No students currently found for this subject roster.
                   </td>
                 </tr>
               ) : (
-                enrolledStudentsForSubject.map((st) => {
+                filteredRoster.map((st) => {
                   const stats = getStudentSubjectStats(st.studentId, currentSubject?.id || '');
 
                   return (
-                    <tr key={st.studentId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr key={st.studentId} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                       
-                      {/* Name & ID */}
+                      {/* Name & ID with Avatar */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-bold text-slate-900 dark:text-white">
-                          {st.studentName}
-                        </div>
-                        <div className="text-[10px] text-indigo-600 dark:text-indigo-400 font-mono">
-                          ID: {st.studentUserCode}
+                        <div className="flex items-center space-x-2.5">
+                          <AvatarDisplay avatarId={st.avatar} name={st.studentName} size="sm" />
+                          <div>
+                            <div className="font-heading font-bold text-stone-900 dark:text-white">
+                              {st.studentName}
+                            </div>
+                            <div className="text-[10px] text-amber-600 dark:text-amber-400 font-mono">
+                              #{st.studentUserCode}
+                            </div>
+                          </div>
                         </div>
                       </td>
 
                       {/* Location */}
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600 dark:text-slate-300">
+                      <td className="px-6 py-4 whitespace-nowrap text-stone-600 dark:text-stone-300 font-sans">
                         {st.location}
                       </td>
 
                       {/* Attendance % */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          <span className={`font-black text-sm ${
+                          <span className={`font-mono font-bold text-xs ${
                             stats.percentage >= 85 
                               ? 'text-emerald-600 dark:text-emerald-400' 
                               : 'text-amber-600 dark:text-amber-400'
                           }`}>
                             {stats.percentage}%
                           </span>
-                          <div className="w-16 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                          <div className="w-16 bg-stone-200 dark:bg-stone-800 h-1.5 rounded-full overflow-hidden">
                             <div 
                               className={`h-full ${stats.percentage >= 85 ? 'bg-emerald-500' : 'bg-amber-500'}`} 
                               style={{ width: `${stats.percentage}%` }}
@@ -211,17 +442,43 @@ export const RosterAndStatsTab: React.FC = () => {
                       </td>
 
                       {/* Counts */}
-                      <td className="px-6 py-4 whitespace-nowrap text-emerald-600 font-bold">
+                      <td className="px-6 py-4 whitespace-nowrap text-emerald-600 font-mono font-bold">
                         {stats.present}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-amber-600 font-bold">
+                      <td className="px-6 py-4 whitespace-nowrap text-amber-600 font-mono font-bold">
                         {stats.late}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-rose-600 font-bold">
+                      <td className="px-6 py-4 whitespace-nowrap text-sky-600 font-mono font-bold">
+                        {stats.excused}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-rose-600 font-mono font-bold">
                         {stats.absent}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap font-mono text-slate-500">
+                      <td className="px-6 py-4 whitespace-nowrap font-mono text-stone-500">
                         {stats.total}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end space-x-2">
+                          {onStartDirectMessage && (
+                            <button
+                              onClick={() => onStartDirectMessage(st.studentId, st.studentName)}
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
+                              title="Message"
+                            >
+                              <MessageSquare className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleBlockStudent(st.studentId, st.studentName)}
+                            disabled={isProcessingBlock}
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900 text-rose-600 dark:text-rose-400 transition-colors cursor-pointer"
+                            title="Block student"
+                          >
+                            <UserX className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </td>
 
                     </tr>
@@ -232,6 +489,122 @@ export const RosterAndStatsTab: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Blocked Students Section if any */}
+      {blockedStudentProfiles.length > 0 && (
+        <div className="bg-rose-50/40 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/60 rounded-3xl p-6 space-y-3 folio-card">
+          <div className="flex items-center space-x-2 text-rose-800 dark:text-rose-300">
+            <ShieldAlert className="h-4 w-4 text-rose-600" />
+            <h4 className="font-heading font-bold text-xs uppercase tracking-wider">
+              Blocked Students ({blockedStudentProfiles.length})
+            </h4>
+          </div>
+          <p className="text-xs text-rose-700/80 dark:text-rose-400 font-sans">
+            These students cannot enroll or mark attendance in {currentSubject?.name}.
+          </p>
+
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2">
+            {blockedStudentProfiles.map((b) => (
+              <div
+                key={b.uid}
+                className="bg-white dark:bg-stone-900 p-3 rounded-2xl border border-rose-200 dark:border-rose-900/50 flex items-center justify-between"
+              >
+                <div className="flex items-center space-x-2 min-w-0">
+                  <AvatarDisplay avatarId={b.avatar} name={b.name} size="xs" />
+                  <div className="min-w-0">
+                    <p className="font-heading font-bold text-stone-900 dark:text-white text-xs truncate">
+                      {b.name}
+                    </p>
+                    <p className="text-[10px] text-stone-400 font-mono">
+                      #{b.userCode}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleUnblockStudent(b.uid)}
+                  disabled={isProcessingBlock}
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-heading font-bold transition-colors shrink-0 cursor-pointer"
+                >
+                  <Unlock className="h-3 w-3 text-emerald-500" />
+                  <span>Unblock</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Import Modal */}
+      {showImportModal && currentSubject && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
+              <div>
+                <h3 className="font-display font-bold text-lg text-stone-900 dark:text-stone-100 flex items-center space-x-2">
+                  <Upload className="h-5 w-5 text-amber-600" />
+                  <span>Bulk Import Student Roster</span>
+                </h3>
+                <p className="text-xs text-stone-500">
+                  Target Course: <strong>{currentSubject.code} — {currentSubject.name}</strong>
+                </p>
+              </div>
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleBulkImport} className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300">
+                  Upload CSV File or Paste Roster Lines
+                </label>
+                
+                {/* File picker */}
+                <input
+                  type="file"
+                  accept=".csv,.txt"
+                  onChange={handleFileUpload}
+                  className="block w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-800 dark:file:text-amber-300 hover:file:bg-amber-500/20 cursor-pointer"
+                />
+
+                {/* Text Area */}
+                <textarea
+                  rows={6}
+                  value={rawImportText}
+                  onChange={(e) => setRawImportText(e.target.value)}
+                  placeholder={`Paste student lines, e.g.:\n1001, John Doe\n1002, Alice Smith\n1003, Bob Johnson`}
+                  required
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs font-mono text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <p className="text-[11px] text-stone-500">
+                  Format accepted: <code>StudentCode, Student Name</code> or just <code>StudentCode</code> per line.
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isImporting || !rawImportText.trim()}
+                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold cursor-pointer transition-all flex items-center space-x-1.5 disabled:opacity-50"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <span>{isImporting ? 'Enrolling Students...' : 'Enroll Students in Batch'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

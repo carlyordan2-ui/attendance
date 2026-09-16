@@ -29,7 +29,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
       <div className="space-y-3">
         <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-[#e9eee0] dark:bg-[#2a3320] border border-[#d9e0cf] dark:border-[#313a26] text-[#5a6344] dark:text-[#b2c098] text-xs font-bold tracking-wide uppercase">
           <GraduationCap className="h-3.5 w-3.5 text-[#5a6344]" />
-          <span>Cedric Institute Attendance Portal</span>
+          <span>Attendance Portal</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-serif font-bold text-[#2d3321] dark:text-[#e5eadc] tracking-tight italic">
           Welcome to <span className="text-[#5a6344] dark:text-[#b2c098] not-italic">AttendEase</span>
@@ -75,7 +75,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
             ) : (
               <>
                 <ShieldCheck className="h-4 w-4" />
-                <span>Enter Admin Mode (Faculty)</span>
+                <span>Teacher Preview</span>
               </>
             )}
           </button>
@@ -119,7 +119,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
             </h2>
 
             <p className="text-sm text-[#2d3321]/80 dark:text-[#e5eadc]/80 mb-6 leading-relaxed">
-              Check in for your daily subject classes, review your personal attendance percentages, apply for subject enrollments, and manage your student profile.
+              Check in for your daily classes, review your attendance, apply for subjects, and manage your profile.
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
                 Portal 02
               </span>
               <span className="h-1 w-1 rounded-full bg-[#d9e0cf] dark:bg-[#313a26]"></span>
-              <span className="text-xs font-semibold text-[#5a6344]/70 dark:text-[#a3b088]/70">Faculty & Admin</span>
+              <span className="text-xs font-semibold text-[#5a6344]/70 dark:text-[#a3b088]/70">Teacher Access</span>
             </div>
 
             <h2 className="text-2xl font-serif font-bold text-[#2d3321] dark:text-[#e5eadc] mb-3 group-hover:text-[#5a6344] dark:group-hover:text-[#b2c098] transition-colors">
@@ -153,7 +153,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
             </h2>
 
             <p className="text-sm text-[#2d3321]/80 dark:text-[#e5eadc]/80 mb-6 leading-relaxed">
-              Approve account requests, view class rosters with live attendance stats, mark or override daily check-ins, inspect security logs, and manage subjects.
+              Approve accounts, view class rosters, mark attendance, review logs, and manage subjects.
             </p>
           </div>
 
@@ -168,7 +168,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ onSelectRole }) =>
       {/* Notice info */}
       <div className="pt-4 text-xs text-[#5a6344]/70 dark:text-[#a3b088]/70 flex items-center justify-center space-x-2">
         <Shield className="h-4 w-4 text-[#5a6344] shrink-0" />
-        <span>New accounts are subject to verification by an approved faculty teacher.</span>
+        <span>New accounts require teacher approval.</span>
       </div>
 
     </div>

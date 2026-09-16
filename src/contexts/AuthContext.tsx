@@ -287,14 +287,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const syntheticEmail = getSyntheticEmail(cleanCode, data.role);
 
     try {
-      // Determine if auto-approved (First teacher in the system gets auto-approved to bootstrap)
-      let initialStatus: 'pending' | 'approved' = 'pending';
-      if (data.role === 'teacher') {
-        const teacherExists = await hasApprovedTeacher();
-        if (!teacherExists) {
-          initialStatus = 'approved'; // Bootstrap first admin teacher
-        }
-      }
+      // Priority 0 Security: A user can only create their own /users doc,
+      // and it must start with status: 'pending' (never self-approve via client write)
+      const initialStatus: 'pending' = 'pending';
 
       const credential = await createUserWithEmailAndPassword(auth, syntheticEmail, data.password);
       
@@ -308,15 +303,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         status: initialStatus,
         departmentOrLocation: data.departmentOrLocation.trim() || 'Main Campus',
         subjectsTaught: data.subjectsTaught || [],
-        createdAt: new Date().toISOString(),
-        // Firestore rejects `undefined` field values outright, so only include
-        // approvedBy/approvedAt when there's an actual value to write.
-        ...(initialStatus === 'approved'
-          ? {
-              approvedBy: 'System Initial Bootstrap',
-              approvedAt: new Date().toISOString()
-            }
-          : {})
+        createdAt: new Date().toISOString()
       };
 
       await setDoc(doc(db, 'users', credential.user.uid), newProfile);
@@ -326,15 +313,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cleanCode,
         cleanName,
         data.role,
-        `New ${data.role.toUpperCase()} registration (${initialStatus === 'approved' ? 'AUTO-APPROVED Initial Teacher' : 'PENDING APPROVAL'})`,
+        `New ${data.role.toUpperCase()} registration (PENDING APPROVAL)`,
         'info'
       );
 
-      if (initialStatus === 'approved') {
-        showToast('Initial Teacher Account Created & Approved! You have full administrative access.', 'success');
-      } else {
-        showToast('Registration successful! Your account is pending teacher approval.', 'info');
-      }
+      showToast('Registration successful! Your account is pending teacher approval.', 'info');
 
     } catch (err: any) {
       console.error('Registration error:', err);

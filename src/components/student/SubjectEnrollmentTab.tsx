@@ -14,7 +14,8 @@ import {
   Clock3, 
   User, 
   MapPin,
-  Sparkles
+  Video,
+  ShieldAlert
 } from 'lucide-react';
 
 export const SubjectEnrollmentTab: React.FC = () => {
@@ -37,6 +38,12 @@ export const SubjectEnrollmentTab: React.FC = () => {
 
   const handleApply = async (subject: Subject) => {
     if (!userProfile) return;
+
+    if (subject.blockedStudentIds?.includes(userProfile.uid)) {
+      showToast('You are blocked from enrolling in this subject by the instructor.', 'error');
+      return;
+    }
+
     setSubmittingSubjectId(subject.id);
 
     try {
@@ -60,10 +67,10 @@ export const SubjectEnrollmentTab: React.FC = () => {
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-2">
         <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
           <BookOpen className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-          <span>Available Subject Catalog</span>
+          <span>Available Subjects</span>
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Apply for class subjects taught at Cedric Institute. Teacher approval is required before check-ins open.
+          Apply for subjects to start attending classes. Teacher approval required.
         </p>
       </div>
 
@@ -71,7 +78,7 @@ export const SubjectEnrollmentTab: React.FC = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {subjects.length === 0 ? (
           <div className="col-span-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center text-xs text-slate-500">
-            No subjects created by Faculty Teachers yet.
+            No subjects available yet.
           </div>
         ) : (
           subjects.map((subj) => {
@@ -89,7 +96,12 @@ export const SubjectEnrollmentTab: React.FC = () => {
                     </span>
 
                     {/* Enrollment Status Pill */}
-                    {enrollment ? (
+                    {userProfile?.uid && subj.blockedStudentIds?.includes(userProfile.uid) ? (
+                      <span className="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 text-xs font-bold flex items-center space-x-1">
+                        <ShieldAlert className="h-3.5 w-3.5 text-rose-600" />
+                        <span>Blocked</span>
+                      </span>
+                    ) : enrollment ? (
                       enrollment.status === 'approved' ? (
                         <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center space-x-1">
                           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -122,7 +134,7 @@ export const SubjectEnrollmentTab: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
                     <div className="flex items-center space-x-1.5">
                       <Clock className="h-3.5 w-3.5 text-amber-500" />
                       <span>{subj.schedule}</span>
@@ -131,11 +143,30 @@ export const SubjectEnrollmentTab: React.FC = () => {
                       <MapPin className="h-3.5 w-3.5 text-emerald-500" />
                       <span>{subj.room}</span>
                     </div>
+
+                    {/* Google Meet Link if enrolled */}
+                    {enrollment?.status === 'approved' && subj.meetUrl && (
+                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                        <a
+                          href={subj.meetUrl.startsWith('http') ? subj.meetUrl : `https://${subj.meetUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
+                        >
+                          <Video className="h-3.5 w-3.5" />
+                          <span>Join Google Meet</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Apply Button */}
-                {!enrollment && (
+                {/* Apply Button or Blocked Notice */}
+                {userProfile?.uid && subj.blockedStudentIds?.includes(userProfile.uid) ? (
+                  <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center">
+                    Enrollment suspended by instructor
+                  </div>
+                ) : !enrollment && (
                   <button
                     onClick={() => handleApply(subj)}
                     disabled={submittingSubjectId === subj.id}

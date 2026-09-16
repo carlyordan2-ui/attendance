@@ -6,11 +6,13 @@ import {
   User, 
   LogIn, 
   GraduationCap, 
-  UserCheck, 
+  ShieldCheck, 
   AlertCircle,
   Eye,
   EyeOff,
-  Zap
+  Compass,
+  KeyRound,
+  ArrowRight
 } from 'lucide-react';
 
 interface LoginFormProps {
@@ -24,7 +26,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onRoleChange,
   onSwitchToRegister
 }) => {
-  const { login, enterAdminMode } = useAuth();
+  const { login } = useAuth();
   const [userCode, setUserCode] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -48,68 +50,74 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const isTeacher = role === 'teacher';
 
   return (
-    <div className="w-full max-w-md mx-auto my-2 sm:my-6 px-1 sm:px-4">
+    <div className="w-full max-w-lg mx-auto my-4 sm:my-8 px-2 sm:px-4">
       
-      {/* Header */}
-      <div className="text-center mb-4 sm:mb-6 space-y-1">
-        <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Welcome to AttendEase
+      {/* Editorial Header */}
+      <div className="text-center mb-6 sm:mb-8 space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+          Sign In
         </h1>
-        <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-          Sign in to access daily attendance & course records
+        <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 max-w-sm mx-auto font-sans">
+          Sign in to your account to view attendance and classes.
         </p>
       </div>
 
-      {/* Single Centered Form Card */}
-      <div className="soft-card p-4 sm:p-8 shadow-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl">
+      {/* Main Plate Card */}
+      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-xl shadow-stone-900/5 dark:shadow-black/40 backdrop-blur-sm folio-card">
         
-        {/* Segmented Pill Role Toggle */}
-        <div className="mb-6 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/80 dark:border-slate-700/80 flex items-center">
+        {/* Corner Marks */}
+        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+
+        {/* Role Switch */}
+        <div className="mb-7 bg-stone-100/90 dark:bg-stone-900/90 p-1.5 rounded-2xl border border-stone-200/90 dark:border-stone-800 flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => onRoleChange('student')}
-            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               !isTeacher
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
             }`}
           >
             <GraduationCap className="h-4 w-4 shrink-0" />
-            <span>Student Login</span>
+            <span className="tracking-wide">Student</span>
           </button>
           
           <button
             type="button"
             onClick={() => onRoleChange('teacher')}
-            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-2 ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               isTeacher
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
             }`}
           >
-            <UserCheck className="h-4 w-4 shrink-0" />
-            <span>Teacher Login</span>
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            <span className="tracking-wide">Teacher</span>
           </button>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-2.5">
+          <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-3">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600" />
-            <div className="leading-relaxed">{error}</div>
+            <div className="leading-relaxed font-sans">{error}</div>
           </div>
         )}
 
-        {/* Login Form */}
+        {/* Credentials Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           
           {/* User Code Field (ID) */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
               {isTeacher ? 'Teacher ID' : 'Student ID'}
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
                 <User className="h-4 w-4" />
               </div>
               <input
@@ -118,23 +126,23 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 id="login-user-code-input"
                 value={userCode}
                 onChange={(e) => setUserCode(e.target.value)}
-                placeholder={isTeacher ? 'e.g. T-2001 or T-MATH' : 'e.g. S-10045 or 2026-0012'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+                placeholder={isTeacher ? 'e.g. T-2001' : 'e.g. S-10045'}
+                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-wide"
               />
             </div>
-            <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-              Note: ID is not an email address.
+            <p className="mt-1 text-[11px] text-stone-400">
+              Enter your assigned ID code.
             </p>
           </div>
 
           {/* Password Field */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
               Password
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock className="h-4 w-4" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <KeyRound className="h-4 w-4" />
               </div>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -142,32 +150,32 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 id="login-password-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                placeholder="••••••••••••"
+                className="w-full pl-10 pr-10 py-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-widest"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Action Button */}
           <button
             type="submit"
             disabled={isSubmitting}
             id="login-submit-btn"
-            className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+            className="w-full py-3.5 px-5 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-gradient-to-r dark:from-amber-500 dark:to-amber-600 dark:hover:from-amber-400 dark:hover:to-amber-500 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-stone-900/10 dark:shadow-amber-500/20 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
             ) : (
               <>
-                <LogIn className="h-4 w-4" />
-                <span>Sign In as {isTeacher ? 'Teacher' : 'Student'}</span>
+                <span>Sign In</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
               </>
             )}
           </button>
@@ -175,15 +183,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </form>
 
         {/* Switch to Register */}
-        <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-slate-800 text-center">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-8 pt-5 border-t border-stone-200 dark:border-stone-800 text-center">
+          <p className="text-xs text-stone-500 dark:text-stone-400">
             Don't have an account?{' '}
             <button
               onClick={onSwitchToRegister}
               id="switch-to-register-btn"
-              className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              className="font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
             >
-              Register as {isTeacher ? 'Teacher' : 'Student'}
+              Register here →
             </button>
           </p>
         </div>
@@ -192,4 +200,3 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     </div>
   );
 };
-

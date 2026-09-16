@@ -1,24 +1,18 @@
 import React from 'react';
-import { Shield } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full border-t border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm py-5 transition-colors mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
-        
-        {/* Left */}
-        <div className="font-medium text-slate-700 dark:text-slate-300">
-          © 2026 AttendEase • Student Attendance System
+    <footer className="w-full border-t border-stone-200/80 dark:border-stone-800/90 bg-stone-100/60 dark:bg-[#0A0B0E]/80 backdrop-blur-md py-4 transition-colors mt-auto text-xs text-stone-500 dark:text-stone-400">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="flex items-center space-x-2">
+          <span className="font-semibold text-stone-800 dark:text-stone-200">AttendEase</span>
+          <span>•</span>
+          <span>Student Attendance System</span>
         </div>
 
-        {/* Right */}
-        <div className="flex items-center space-x-4 text-slate-500 dark:text-slate-400">
-          <div className="flex items-center space-x-1.5">
-            <Shield className="h-3.5 w-3.5 text-indigo-500" />
-            <span>Cedric Institute Academic Portal</span>
-          </div>
+        <div className="flex items-center space-x-2 text-stone-600 dark:text-stone-400">
+          <span className="font-medium text-amber-600 dark:text-amber-400">Made by Team Cedric</span>
         </div>
-
       </div>
     </footer>
   );

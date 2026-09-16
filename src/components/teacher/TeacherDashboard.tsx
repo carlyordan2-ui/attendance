@@ -7,6 +7,8 @@ import { ActivityLogsTab } from './ActivityLogsTab';
 import { ManageSubjectsTab } from './ManageSubjectsTab';
 import { AnnouncementsTab } from '../classroom/AnnouncementsTab';
 import { AssignmentsTab } from '../classroom/AssignmentsTab';
+import { DirectMessagesTab } from '../messages/DirectMessagesTab';
+import { FacultyDirectoryTab } from '../directory/FacultyDirectoryTab';
 import { useAuth } from '../../contexts/AuthContext';
 import { subscribeSubjects } from '../../services/attendanceService';
 import { Subject } from '../../types';
@@ -22,15 +24,33 @@ import {
   Menu,
   X,
   Megaphone,
-  ClipboardList
+  ClipboardList,
+  MessageSquare,
+  Contact2,
+  Compass,
+  Award
 } from 'lucide-react';
+
+interface DashboardTabItem {
+  id: 'stream' | 'classwork' | 'approvals' | 'roster' | 'mark' | 'logs' | 'activity' | 'subjects' | 'messages' | 'directory';
+  label: string;
+  shortLabel: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}
+
+interface NavCategory {
+  group: string;
+  tabs: DashboardTabItem[];
+}
 
 export const TeacherDashboard: React.FC = () => {
   const { userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<
-    'stream' | 'classwork' | 'approvals' | 'roster' | 'mark' | 'logs' | 'activity' | 'subjects'
+    'stream' | 'classwork' | 'approvals' | 'roster' | 'mark' | 'logs' | 'activity' | 'subjects' | 'messages' | 'directory'
   >('stream');
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [preselectedRecipient, setPreselectedRecipient] = useState<{ uid: string; name: string } | null>(null);
 
   // Desktop sidebar collapse toggle state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -42,27 +62,91 @@ export const TeacherDashboard: React.FC = () => {
     return () => unsub();
   }, []);
 
-  const tabs = [
-    { id: 'stream', label: "Stream & Announcements", shortLabel: "Stream", icon: Megaphone },
-    { id: 'classwork', label: "Assignments & Grading", shortLabel: "Classwork", icon: ClipboardList },
-    { id: 'approvals', label: "Account Approvals", shortLabel: "Approvals", icon: ShieldCheck },
-    { id: 'roster', label: "Rosters & Stats", shortLabel: "Rosters", icon: Users },
-    { id: 'mark', label: "Mark Attendance", shortLabel: "Mark", icon: CheckSquare },
-    { id: 'logs', label: "Attendance Logs", shortLabel: "Logs", icon: FileText },
-    { id: 'activity', label: "Security Logs", shortLabel: "Security", icon: ShieldAlert },
-    { id: 'subjects', label: "Manage Subjects", shortLabel: "Subjects", icon: BookOpen },
-  ] as const;
+  const handleStartDirectMessage = (recipientId: string, recipientName: string) => {
+    setPreselectedRecipient({ uid: recipientId, name: recipientName });
+    setActiveTab('messages');
+  };
 
-  const activeTabObj = tabs.find(t => t.id === activeTab);
+  const navCategories: NavCategory[] = [
+    {
+      group: "Classroom",
+      tabs: [
+        { id: 'stream', label: "Announcements", shortLabel: "Announcements", icon: Megaphone },
+        { id: 'classwork', label: "Assignments", shortLabel: "Assignments", icon: ClipboardList },
+        { id: 'messages', label: "Messages", shortLabel: "Messages", icon: MessageSquare },
+        { id: 'directory', label: "Directory", shortLabel: "Directory", icon: Contact2 },
+      ]
+    },
+    {
+      group: "Attendance",
+      tabs: [
+        { id: 'mark', label: "Mark Attendance", shortLabel: "Mark", icon: CheckSquare, badge: "Daily" },
+        { id: 'logs', label: "Attendance Logs", shortLabel: "Logs", icon: FileText },
+        { id: 'roster', label: "Class Roster", shortLabel: "Roster", icon: Users },
+      ]
+    },
+    {
+      group: "Management",
+      tabs: [
+        { id: 'approvals', label: "Approvals", shortLabel: "Approvals", icon: ShieldCheck, badge: "Admin" },
+        { id: 'subjects', label: "Manage Subjects", shortLabel: "Subjects", icon: BookOpen },
+        { id: 'activity', label: "Activity Logs", shortLabel: "Activity", icon: ShieldAlert },
+      ]
+    }
+  ];
+
+  const allTabs: DashboardTabItem[] = navCategories.flatMap(c => c.tabs);
+  const activeTabObj = allTabs.find(t => t.id === activeTab);
 
   if (!userProfile) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-6">
       
-      {/* Top Bar with Navigation Symbol Button */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800">
-        <div className="flex items-center space-x-2.5">
+      {/* Faculty Overview Banner */}
+      <div className="relative bg-white/80 dark:bg-[#111318]/80 border border-stone-200/90 dark:border-stone-800 rounded-3xl p-5 sm:p-7 backdrop-blur-md shadow-sm folio-card">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-800 dark:text-amber-300 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 flex items-center space-x-1">
+                <Award className="h-3 w-3 inline mr-1 text-amber-600 dark:text-amber-400" />
+                TEACHER
+              </span>
+              <span className="text-stone-300 dark:text-stone-700 font-mono text-xs">•</span>
+              <span className="text-stone-500 dark:text-stone-400 font-mono text-xs">
+                {userProfile.departmentOrLocation || 'Faculty'}
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+              {userProfile.name}
+            </h1>
+            <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
+              Teacher ID: <span className="font-mono text-stone-700 dark:text-stone-300 font-bold">#{userProfile.userCode}</span>
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-3 self-start md:self-auto">
+            <div className="px-3.5 py-2 rounded-2xl bg-stone-100/90 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-left font-mono">
+              <div className="text-[9px] uppercase tracking-wider text-stone-400 font-bold">Subjects</div>
+              <div className="text-sm font-bold text-stone-900 dark:text-amber-400">
+                {userProfile.subjectsTaught?.length || subjects.length} Assigned
+              </div>
+            </div>
+
+            <div className="px-3.5 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-left font-mono">
+              <div className="text-[9px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold">Status</div>
+              <div className="text-sm font-bold text-emerald-700 dark:text-emerald-300 flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sub-bar with Navigation Trigger & Breadcrumb */}
+      <div className="flex items-center justify-between pb-2 border-b border-stone-200/90 dark:border-stone-800">
+        <div className="flex items-center space-x-3">
           <button
             onClick={() => {
               if (window.innerWidth < 1024) {
@@ -72,120 +156,151 @@ export const TeacherDashboard: React.FC = () => {
               }
             }}
             id="toggle-teacher-sidebar-btn"
-            title="Toggle Navigation Menu"
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-400 transition-colors shadow-sm flex items-center space-x-2"
+            title="Toggle Menu"
+            className="px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-heading font-bold text-xs transition-all shadow-xs flex items-center space-x-2 cursor-pointer"
           >
-            <Menu className="h-5 w-5 lg:hidden" />
-            <span className="hidden lg:inline-block">
-              {isSidebarOpen ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeft className="h-5 w-5" />}
+            <Menu className="h-4 w-4 lg:hidden text-amber-600" />
+            <span className="hidden lg:inline-block text-amber-600 dark:text-amber-400">
+              {isSidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
             </span>
-            <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-              Navigation
-            </span>
+            <span>Menu</span>
           </button>
 
-          <div className="flex items-center space-x-2">
-            <span className="text-slate-400 dark:text-slate-600 text-sm font-bold">/</span>
-            <h2 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+          <div className="flex items-center space-x-2 font-mono text-xs">
+            <span className="text-stone-300 dark:text-stone-700 font-bold">/</span>
+            <span className="font-heading font-bold text-stone-900 dark:text-stone-100">
               {activeTabObj?.label}
-            </h2>
+            </span>
           </div>
-        </div>
-
-        <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400">
-          <span className="font-mono text-[11px] font-bold text-slate-600 dark:text-slate-400 hidden sm:inline">
-            Faculty Portal
-          </span>
         </div>
       </div>
 
       {/* Main Layout Grid */}
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative">
         
-        {/* Desktop Left Sidebar App-Shell (1024px+) */}
+        {/* Desktop Navigation Sidebar */}
         {isSidebarOpen && (
-          <aside className="hidden lg:block w-64 lg:w-72 shrink-0 sticky top-20">
-            <div className="soft-card p-4 space-y-3 shadow-sm rounded-2xl border border-slate-200/80 dark:border-slate-800">
-              <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-2.5 flex items-center justify-between">
-                <span>Faculty Menu</span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 font-mono">Live</span>
+          <aside className="hidden lg:block w-72 shrink-0 sticky top-22">
+            <div className="bg-white/95 dark:bg-[#111318]/95 p-4 space-y-5 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm folio-card">
+              
+              <div className="px-2 pb-2 border-b border-stone-100 dark:border-stone-800/80 flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-stone-400">
+                  Navigation
+                </span>
+                <span className="flex items-center space-x-1 font-mono text-[9px] text-amber-600 dark:text-amber-400">
+                  <Compass className="h-3 w-3" />
                 </span>
               </div>
 
-              <nav className="space-y-1">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
+              <div className="space-y-4">
+                {navCategories.map((category) => (
+                  <div key={category.group} className="space-y-1">
+                    <div className="px-2.5 py-1 text-[9px] font-mono uppercase tracking-widest text-stone-400 font-bold">
+                      {category.group}
+                    </div>
+                    
+                    <div className="space-y-0.5">
+                      {category.tabs.map((tab) => {
+                        const Icon = tab.icon;
+                        const isActive = activeTab === tab.id;
 
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      id={`teacher-tab-${tab.id}`}
-                      className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-bold text-xs transition-all text-left border ${
-                        isActive
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-600/20'
-                          : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      <span className="truncate">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
+                        return (
+                          <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            id={`teacher-tab-${tab.id}`}
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-heading font-semibold transition-all text-left cursor-pointer border ${
+                              isActive
+                                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-md shadow-stone-900/10'
+                                : 'bg-transparent text-stone-600 dark:text-stone-400 border-transparent hover:bg-stone-100 dark:hover:bg-stone-800/60 hover:text-stone-900 dark:hover:text-stone-200'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2.5 truncate">
+                              <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-white dark:text-stone-950' : 'text-stone-400'}`} />
+                              <span className="truncate">{tab.label}</span>
+                            </div>
+
+                            {'badge' in tab && tab.badge && (
+                              <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded uppercase ${
+                                isActive 
+                                  ? 'bg-white/20 text-white dark:bg-stone-950/20 dark:text-stone-950' 
+                                  : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                              }`}>
+                                {tab.badge}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Faculty Identification Footer */}
+              <div className="pt-3 border-t border-stone-100 dark:border-stone-800 font-mono text-[10px] text-stone-400 text-center">
+                ID: {userProfile.userCode}
+              </div>
+
             </div>
           </aside>
         )}
 
         {/* Mobile & Tablet Slide-Over Drawer Navigation */}
         {isMobileDrawerOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex justify-start">
-            <div className="bg-white dark:bg-slate-900 w-72 h-full p-5 space-y-4 shadow-2xl border-r border-slate-200 dark:border-slate-800 animate-in slide-in-from-left duration-200 flex flex-col justify-between">
+          <div className="lg:hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex justify-start">
+            <div className="bg-white dark:bg-[#111318] w-80 max-w-[85vw] h-full p-5 space-y-4 shadow-2xl border-r border-stone-200 dark:border-stone-800 animate-in slide-in-from-left duration-200 flex flex-col justify-between overflow-y-auto">
               <div>
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <span className="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
-                    <PanelLeft className="h-4 w-4 text-indigo-600" />
-                    <span>Faculty Navigation</span>
+                <div className="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
+                  <span className="font-display font-bold text-sm text-stone-900 dark:text-white flex items-center space-x-2">
+                    <Compass className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <span>Navigation</span>
                   </span>
                   <button
                     onClick={() => setIsMobileDrawerOpen(false)}
-                    className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="p-1.5 rounded-xl text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
                   >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
 
-                <nav className="space-y-1.5 mt-4">
-                  {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
+                <div className="space-y-4 mt-4">
+                  {navCategories.map((category) => (
+                    <div key={category.group} className="space-y-1">
+                      <div className="px-2 text-[9px] font-mono uppercase tracking-widest text-stone-400 font-bold">
+                        {category.group}
+                      </div>
+                      <div className="space-y-1">
+                        {category.tabs.map((tab) => {
+                          const Icon = tab.icon;
+                          const isActive = activeTab === tab.id;
 
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => {
-                          setActiveTab(tab.id);
-                          setIsMobileDrawerOpen(false);
-                        }}
-                        className={`w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-bold text-xs transition-all text-left border ${
-                          isActive
-                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                            : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
-                        }`}
-                      >
-                        <Icon className="h-4.5 w-4.5 shrink-0" />
-                        <span>{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
+                          return (
+                            <button
+                              key={tab.id}
+                              onClick={() => {
+                                setActiveTab(tab.id as any);
+                                setIsMobileDrawerOpen(false);
+                              }}
+                              className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-heading font-bold text-xs transition-all text-left border cursor-pointer ${
+                                isActive
+                                  ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-sm'
+                                  : 'bg-transparent text-stone-600 dark:text-stone-400 border-transparent hover:bg-stone-100 dark:hover:bg-stone-800'
+                              }`}
+                            >
+                              <Icon className="h-4 w-4 shrink-0" />
+                              <span>{tab.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 text-center font-mono">
-                Cedric Institute Faculty Portal
+              <div className="pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-400 text-center">
+                AttendEase
               </div>
             </div>
           </div>
@@ -195,8 +310,24 @@ export const TeacherDashboard: React.FC = () => {
         <main className="flex-1 min-w-0 w-full space-y-6">
           {activeTab === 'stream' && <AnnouncementsTab userProfile={userProfile} subjects={subjects} />}
           {activeTab === 'classwork' && <AssignmentsTab userProfile={userProfile} subjects={subjects} />}
+          {activeTab === 'messages' && (
+            <DirectMessagesTab 
+              currentUser={userProfile}
+              preselectedRecipientId={preselectedRecipient?.uid}
+              preselectedRecipientName={preselectedRecipient?.name}
+            />
+          )}
+          {activeTab === 'directory' && (
+            <FacultyDirectoryTab 
+              onStartDirectMessage={handleStartDirectMessage}
+            />
+          )}
           {activeTab === 'approvals' && <PendingApprovalsTab />}
-          {activeTab === 'roster' && <RosterAndStatsTab />}
+          {activeTab === 'roster' && (
+            <RosterAndStatsTab 
+              onStartDirectMessage={handleStartDirectMessage}
+            />
+          )}
           {activeTab === 'mark' && <MarkAttendanceTab />}
           {activeTab === 'logs' && <AttendanceLogsTab />}
           {activeTab === 'activity' && <ActivityLogsTab />}
@@ -207,6 +338,3 @@ export const TeacherDashboard: React.FC = () => {
     </div>
   );
 };
-
-
-
