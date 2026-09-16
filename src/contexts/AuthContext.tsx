@@ -38,7 +38,6 @@ interface AuthContextType {
     contactEmail?: string;
     subjectsTaught?: string[];
   }) => Promise<void>;
-  enterAdminMode: (asRole?: UserRole) => Promise<void>;
   logout: () => Promise<void>;
   toastMessage: { text: string; type: 'success' | 'error' | 'info' } | null;
   showToast: (text: string, type?: 'success' | 'error' | 'info') => void;
@@ -367,80 +366,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const enterAdminMode = async (asRole: UserRole = 'teacher') => {
-    const adminCode = asRole === 'teacher' ? 'ADMIN-DEMO' : 'STUDENT-DEMO';
-    const adminPassword = 'demo-admin-password-2026';
-    const syntheticEmail = getSyntheticEmail(adminCode, asRole);
-
-    const fallbackProfile: UserProfile = {
-      uid: asRole === 'teacher' ? 'admin-demo-uid-999' : 'student-demo-uid-999',
-      userCode: adminCode,
-      name: asRole === 'teacher' ? 'Faculty Admin Preview' : 'Demo Student Preview',
-      email: `${adminCode.toLowerCase()}@${DOMAIN}`,
-      syntheticEmail,
-      role: asRole,
-      status: 'approved',
-      departmentOrLocation: asRole === 'teacher' ? 'Cedric Institute Administration' : 'Grade 12 - Section A',
-      subjectsTaught: asRole === 'teacher' ? ['CS101', 'MATH202', 'ENG101'] : [],
-      createdAt: new Date().toISOString(),
-      approvedBy: 'Instant Admin Mode',
-      approvedAt: new Date().toISOString()
-    };
-
-    const mockUser = {
-      uid: fallbackProfile.uid,
-      email: syntheticEmail,
-      displayName: fallbackProfile.name,
-    } as any;
-
-    // Immediately set active local session so user enters the dashboard instantly
-    setFirebaseUser(mockUser);
-    setUserProfile(fallbackProfile);
-    setSelectedRole(asRole);
-    showToast(`Express Admin Mode active (${asRole === 'teacher' ? 'Teacher Admin' : 'Student Preview'})!`, 'success');
-
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, syntheticEmail, adminPassword);
-      setFirebaseUser(userCred.user);
-      const profileSnap = await getDoc(doc(db, 'users', userCred.user.uid));
-      if (!profileSnap.exists()) {
-        await setDoc(doc(db, 'users', userCred.user.uid), fallbackProfile);
-      }
-      try {
-        await logActivity(
-          'login_success',
-          adminCode,
-          fallbackProfile.name,
-          asRole,
-          `Logged in via Express Admin Mode (No Account Required)`,
-          'info'
-        );
-      } catch (e) {
-        // ignore logging error
-      }
-    } catch (err: any) {
-      console.warn('Firebase Auth error during Admin Mode signin:', err);
-
-      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-        try {
-          const newCred = await createUserWithEmailAndPassword(auth, syntheticEmail, adminPassword);
-          setFirebaseUser(newCred.user);
-          await setDoc(doc(db, 'users', newCred.user.uid), { ...fallbackProfile, uid: newCred.user.uid });
-          return;
-        } catch (createErr: any) {
-          console.warn('Failed creating demo admin user in Firebase Auth:', createErr);
-        }
-      }
-
-      // Ensure Firestore attempt for fallback profile
-      try {
-        await setDoc(doc(db, 'users', fallbackProfile.uid), fallbackProfile, { merge: true });
-      } catch (e) {
-        // optional
-      }
-    }
-  };
-
   const logout = async () => {
     if (userProfile) {
       try {
@@ -481,7 +406,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toggleTheme,
       login,
       register,
-      enterAdminMode,
       logout,
       toastMessage,
       showToast
