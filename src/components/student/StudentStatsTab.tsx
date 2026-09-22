@@ -17,8 +17,7 @@ import {
   TrendingUp, 
   Award,
   AlertTriangle,
-  FileCheck2,
-  BookOpen
+  FileCheck2
 } from 'lucide-react';
 
 export const StudentStatsTab: React.FC = () => {
@@ -98,10 +97,10 @@ export const StudentStatsTab: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Attendance % Badge */}
-        <div className={`rounded-3xl p-5 shadow-sm flex flex-col justify-between folio-card border ${
+        <div className={`rounded-3xl p-5 shadow-xs flex flex-col justify-between folio-card border ${
           isAtRisk
             ? 'bg-rose-950 text-white border-rose-700'
-            : 'bg-stone-900 text-stone-100 dark:bg-amber-500 dark:text-stone-950 border-stone-800 dark:border-amber-400'
+            : 'bg-stone-900 text-stone-100 dark:bg-white dark:text-stone-950 border-stone-800 dark:border-white'
         }`}>
           <div className="flex items-center justify-between opacity-80">
             <span className="text-xs font-mono font-bold uppercase tracking-wider">Attendance Rate</span>
@@ -122,7 +121,7 @@ export const StudentStatsTab: React.FC = () => {
         </div>
 
         {/* Present Count */}
-        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-xs flex flex-col justify-between folio-card">
+        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-2xs flex flex-col justify-between folio-card">
           <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400">
             <span className="text-xs font-mono font-bold uppercase tracking-wider">Present</span>
             <CheckCircle2 className="h-4 w-4" />
@@ -135,7 +134,7 @@ export const StudentStatsTab: React.FC = () => {
         </div>
 
         {/* Late Count */}
-        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-xs flex flex-col justify-between folio-card">
+        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-2xs flex flex-col justify-between folio-card">
           <div className="flex items-center justify-between text-amber-600 dark:text-amber-400">
             <span className="text-xs font-mono font-bold uppercase tracking-wider">Late</span>
             <Clock className="h-4 w-4" />
@@ -148,7 +147,7 @@ export const StudentStatsTab: React.FC = () => {
         </div>
 
         {/* Excused Count */}
-        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-xs flex flex-col justify-between folio-card">
+        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-2xs flex flex-col justify-between folio-card">
           <div className="flex items-center justify-between text-sky-600 dark:text-sky-400">
             <span className="text-xs font-mono font-bold uppercase tracking-wider">Excused</span>
             <FileCheck2 className="h-4 w-4" />
@@ -161,7 +160,7 @@ export const StudentStatsTab: React.FC = () => {
         </div>
 
         {/* Absent Count */}
-        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-xs flex flex-col justify-between folio-card">
+        <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-2xs flex flex-col justify-between folio-card">
           <div className="flex items-center justify-between text-rose-600 dark:text-rose-400">
             <span className="text-xs font-mono font-bold uppercase tracking-wider">Absent</span>
             <XCircle className="h-4 w-4" />
@@ -176,11 +175,11 @@ export const StudentStatsTab: React.FC = () => {
       </div>
 
       {/* Subject Breakdown */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5 folio-card">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xs space-y-5 folio-card">
         <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4">
           <div>
-            <h3 className="text-lg font-display font-bold text-stone-900 dark:text-white flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-amber-600" />
+            <h3 className="text-lg font-display font-bold italic text-stone-900 dark:text-white flex items-center space-x-2">
+              <TrendingUp className="h-4 w-4 text-stone-700 dark:text-stone-300" />
               <span>Subject Breakdown</span>
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -209,7 +208,7 @@ export const StudentStatsTab: React.FC = () => {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-400">
+                      <span className="font-mono text-xs font-bold text-stone-500 dark:text-stone-400">
                         {subj.code}
                       </span>
                       <h4 className="font-heading font-bold text-stone-900 dark:text-white text-base">

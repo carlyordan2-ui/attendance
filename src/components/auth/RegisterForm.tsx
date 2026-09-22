@@ -97,34 +97,34 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <div className="w-full max-w-xl mx-auto my-4 sm:my-8 px-2 sm:px-4">
       
-      {/* Header */}
+      {/* Editorial Header */}
       <div className="text-center mb-6 sm:mb-8 space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-display font-bold italic text-stone-900 dark:text-stone-100 tracking-tight">
           Create Account
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 max-w-md mx-auto font-sans">
-          Register as a student or teacher to get started.
+        <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 max-w-md mx-auto font-sans">
+          Register as a student or teacher to access the attendance system.
         </p>
       </div>
 
       {/* Main Form Plate */}
-      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-xl shadow-stone-900/5 dark:shadow-black/40 backdrop-blur-sm folio-card">
+      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-2xl shadow-stone-900/5 dark:shadow-black/50 backdrop-blur-md folio-card">
         
         {/* Subtle Corner Registration Marks */}
-        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
 
-        {/* Segmented Pill Role Toggle */}
-        <div className="mb-6 bg-stone-100/90 dark:bg-stone-900/90 p-1.5 rounded-2xl border border-stone-200/90 dark:border-stone-800 flex items-center gap-1.5">
+        {/* Role Switch */}
+        <div className="mb-6 bg-stone-100 dark:bg-stone-900 p-1.5 rounded-2xl border border-stone-200 dark:border-stone-800 flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => onRoleChange('student')}
             className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               !isTeacher
-                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
+                ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
             }`}
           >
             <GraduationCap className="h-4 w-4 shrink-0" />
@@ -136,8 +136,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             onClick={() => onRoleChange('teacher')}
             className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               isTeacher
-                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
+                ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
             }`}
           >
             <ShieldCheck className="h-4 w-4 shrink-0" />
@@ -146,33 +146,33 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         </div>
 
         {/* Notice Box */}
-        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs flex items-start space-x-3">
-          <Compass className="h-4 w-4 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
+        <div className="mb-6 p-3.5 rounded-2xl bg-stone-100/90 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 text-xs flex items-start space-x-3">
+          <Compass className="h-4 w-4 mt-0.5 shrink-0 text-stone-600 dark:text-stone-400" />
           <div className="leading-relaxed font-sans">
-            <strong className="font-heading uppercase tracking-wider text-[11px] block">Notice:</strong>
-            New {role} accounts require teacher approval before logging in.
+            <strong className="font-heading uppercase tracking-wider text-[10px] text-stone-900 dark:text-stone-100 block">Approval Notice:</strong>
+            New {role} accounts require teacher approval before system entry.
           </div>
         </div>
 
         {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-3">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600" />
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" />
             <div className="leading-relaxed font-sans">{error}</div>
           </div>
         )}
 
-        {/* Register Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Register Form with Underlined Rows */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* User ID Field */}
-            <div>
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
                 {isTeacher ? 'Faculty ID' : 'Student ID'} <span className="text-rose-500">*</span>
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+              <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                   <User className="h-4 w-4" />
                 </div>
                 <input
@@ -182,36 +182,38 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                   value={userCode}
                   onChange={(e) => setUserCode(e.target.value)}
                   placeholder={isTeacher ? 'e.g. T-2001' : 'e.g. S-10045'}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono"
+                  className="w-full pl-8 pr-3 py-2 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-mono tracking-wide placeholder:text-stone-400 dark:placeholder:text-stone-600"
                 />
               </div>
             </div>
 
             {/* Full Name */}
-            <div>
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
-                Legal Full Name <span className="text-rose-500">*</span>
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                Full Name <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="text"
-                required
-                id="register-name-input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Eleanor Vance"
-                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
-              />
+              <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+                <input
+                  type="text"
+                  required
+                  id="register-name-input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Eleanor Vance"
+                  className="w-full px-1 py-2 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-sans placeholder:text-stone-400 dark:placeholder:text-stone-600"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Password */}
-            <div>
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
-                Access Password <span className="text-rose-500">*</span>
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                Password <span className="text-rose-500">*</span>
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+              <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                   <Lock className="h-4 w-4" />
                 </div>
                 <input
@@ -221,18 +223,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-wider"
+                  className="w-full pl-8 pr-3 py-2 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-mono tracking-widest placeholder:text-stone-400 dark:placeholder:text-stone-600"
                 />
               </div>
             </div>
 
             {/* Contact Email (Optional) */}
-            <div>
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
                 Contact Email <span className="text-stone-400 font-normal">(Optional)</span>
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+              <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                   <Mail className="h-4 w-4" />
                 </div>
                 <input
@@ -241,19 +243,19 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
                   placeholder="name@institute.edu"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  className="w-full pl-8 pr-3 py-2 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-sans placeholder:text-stone-400 dark:placeholder:text-stone-600"
                 />
               </div>
             </div>
           </div>
 
           {/* Department or Location */}
-          <div>
-            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
               {isTeacher ? 'Academic Department & Office' : 'Cohort / Grade Level & Section'}
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+              <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                 <MapPin className="h-4 w-4" />
               </div>
               <input
@@ -262,15 +264,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 value={departmentOrLocation}
                 onChange={(e) => setDepartmentOrLocation(e.target.value)}
                 placeholder={isTeacher ? 'e.g. Science Building - Hall 302' : 'e.g. Class 10 - Section B'}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                className="w-full pl-8 pr-3 py-2 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-sans placeholder:text-stone-400 dark:placeholder:text-stone-600"
               />
             </div>
           </div>
 
           {/* If Teacher: Subjects Taught */}
           {isTeacher && (
-            <div className="pt-2 space-y-2.5 border-t border-stone-200 dark:border-stone-800">
-              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
+            <div className="pt-3 space-y-2.5 border-t border-stone-200 dark:border-stone-800">
+              <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
                 Subjects Instructed <span className="text-rose-500">*</span>
               </label>
 
@@ -287,14 +289,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                       handleAddCustomSubject();
                     }
                   }}
-                  placeholder="Enter custom discipline (e.g. Quantum Physics)..."
-                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  placeholder="Add custom subject (e.g. Quantum Physics)..."
+                  className="flex-1 px-3.5 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-transparent text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white transition-all font-sans"
                 />
                 <button
                   type="button"
                   onClick={handleAddCustomSubject}
                   id="add-custom-subject-btn"
-                  className="px-4 py-2.5 rounded-xl bg-stone-900 dark:bg-amber-500 hover:bg-stone-800 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs shrink-0 transition-colors shadow-sm cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs shrink-0 transition-colors shadow-2xs cursor-pointer border border-stone-900 dark:border-white"
                 >
                   + Add
                 </button>
@@ -310,8 +312,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                       onClick={() => toggleSubject(sub)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all flex items-center space-x-1 border cursor-pointer ${
                         isSel
-                          ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-sm'
-                          : 'bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:border-amber-500/40'
+                          ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 border-stone-900 dark:border-white shadow-2xs'
+                          : 'bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:border-stone-400 dark:hover:border-stone-600'
                       }`}
                     >
                       {isSel && <CheckCircle2 className="h-3 w-3 mr-1 shrink-0" />}
@@ -322,7 +324,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               </div>
 
               {selectedSubjects.length === 0 && (
-                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-mono">
+                <p className="text-[11px] text-stone-500 font-mono">
                   * Select or register at least one instructional subject.
                 </p>
               )}
@@ -334,7 +336,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             type="submit"
             disabled={isSubmitting}
             id="register-submit-btn"
-            className="w-full py-3.5 px-5 mt-4 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-gradient-to-r dark:from-amber-500 dark:to-amber-600 dark:hover:from-amber-400 dark:hover:to-amber-500 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-stone-900/10 dark:shadow-amber-500/20 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-3.5 px-5 mt-4 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 border border-stone-900 dark:border-white"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
@@ -356,7 +358,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             <button
               onClick={onSwitchToLogin}
               id="switch-to-login-btn"
-              className="font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+              className="font-bold text-stone-900 dark:text-white underline underline-offset-4 decoration-stone-300 dark:decoration-stone-700 hover:decoration-stone-900 dark:hover:decoration-white cursor-pointer transition-colors"
             >
               Sign in here →
             </button>

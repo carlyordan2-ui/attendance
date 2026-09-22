@@ -25,8 +25,7 @@ import {
   ClipboardList,
   MessageSquare,
   Contact2,
-  Compass,
-  Layers
+  Compass
 } from 'lucide-react';
 
 interface DashboardTabItem {
@@ -101,11 +100,11 @@ export const StudentDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-6">
       
       {/* Welcome Header */}
-      <div className="relative bg-white/80 dark:bg-[#111318]/80 border border-stone-200/90 dark:border-stone-800 rounded-3xl p-5 sm:p-7 backdrop-blur-md shadow-sm folio-card">
+      <div className="relative bg-white/90 dark:bg-[#111318]/90 border border-stone-200/90 dark:border-stone-800 rounded-3xl p-5 sm:p-7 backdrop-blur-md shadow-xs folio-card">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-700 dark:text-amber-400 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-stone-700 dark:text-stone-300 font-bold bg-stone-100 dark:bg-stone-800 px-2.5 py-0.5 rounded-full border border-stone-200 dark:border-stone-700">
                 STUDENT
               </span>
               <span className="text-stone-300 dark:text-stone-700 font-mono text-xs">•</span>
@@ -113,7 +112,7 @@ export const StudentDashboard: React.FC = () => {
                 {userProfile.departmentOrLocation || 'Main Campus'}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold italic text-stone-900 dark:text-stone-100 tracking-tight">
               {userProfile.name}
             </h1>
             <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -124,7 +123,7 @@ export const StudentDashboard: React.FC = () => {
           <div className="flex items-center space-x-3 self-start md:self-auto">
             <div className="px-3.5 py-2 rounded-2xl bg-stone-100/90 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-left font-mono">
               <div className="text-[9px] uppercase tracking-wider text-stone-400 font-bold">Courses</div>
-              <div className="text-sm font-bold text-stone-900 dark:text-amber-400">
+              <div className="text-sm font-bold text-stone-900 dark:text-white">
                 {subjects.length} Enrolled
               </div>
             </div>
@@ -153,10 +152,10 @@ export const StudentDashboard: React.FC = () => {
             }}
             id="toggle-student-sidebar-btn"
             title="Toggle Menu"
-            className="px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-heading font-bold text-xs transition-all shadow-xs flex items-center space-x-2 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-heading font-bold text-xs transition-all shadow-2xs flex items-center space-x-2 cursor-pointer"
           >
-            <Menu className="h-4 w-4 lg:hidden text-amber-600" />
-            <span className="hidden lg:inline-block text-amber-600 dark:text-amber-400">
+            <Menu className="h-4 w-4 lg:hidden text-stone-700 dark:text-stone-300" />
+            <span className="hidden lg:inline-block text-stone-700 dark:text-stone-300">
               {isSidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
             </span>
             <span>Menu</span>
@@ -177,13 +176,13 @@ export const StudentDashboard: React.FC = () => {
         {/* Desktop Navigation Sidebar */}
         {isSidebarOpen && (
           <aside className="hidden lg:block w-72 shrink-0 sticky top-22">
-            <div className="bg-white/95 dark:bg-[#111318]/95 p-4 space-y-5 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm folio-card">
+            <div className="bg-white/95 dark:bg-[#111318]/95 p-4 space-y-5 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-xs folio-card">
               
               <div className="px-2 pb-2 border-b border-stone-100 dark:border-stone-800/80 flex items-center justify-between">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-stone-400">
                   Navigation
                 </span>
-                <span className="flex items-center space-x-1 font-mono text-[9px] text-amber-600 dark:text-amber-400">
+                <span className="flex items-center space-x-1 font-mono text-[9px] text-stone-500 dark:text-stone-400">
                   <Compass className="h-3 w-3" />
                 </span>
               </div>
@@ -207,7 +206,7 @@ export const StudentDashboard: React.FC = () => {
                             id={`student-tab-${tab.id}`}
                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-heading font-semibold transition-all text-left cursor-pointer border ${
                               isActive
-                                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-md shadow-stone-900/10'
+                                ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 border-stone-900 dark:border-white shadow-2xs'
                                 : 'bg-transparent text-stone-600 dark:text-stone-400 border-transparent hover:bg-stone-100 dark:hover:bg-stone-800/60 hover:text-stone-900 dark:hover:text-stone-200'
                             }`}
                           >
@@ -244,12 +243,17 @@ export const StudentDashboard: React.FC = () => {
 
         {/* Mobile & Tablet Slide-Over Drawer Navigation */}
         {isMobileDrawerOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex justify-start">
+          <div 
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsMobileDrawerOpen(false);
+            }}
+            className="lg:hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex justify-start"
+          >
             <div className="bg-white dark:bg-[#111318] w-80 max-w-[85vw] h-full p-5 space-y-4 shadow-2xl border-r border-stone-200 dark:border-stone-800 animate-in slide-in-from-left duration-200 flex flex-col justify-between overflow-y-auto">
               <div>
                 <div className="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
-                  <span className="font-display font-bold text-sm text-stone-900 dark:text-white flex items-center space-x-2">
-                    <Compass className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <span className="font-display font-bold italic text-sm text-stone-900 dark:text-white flex items-center space-x-2">
+                    <Compass className="h-4 w-4 text-stone-700 dark:text-stone-300" />
                     <span>Navigation</span>
                   </span>
                   <button
@@ -280,7 +284,7 @@ export const StudentDashboard: React.FC = () => {
                               }}
                               className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-heading font-bold text-xs transition-all text-left border cursor-pointer ${
                                 isActive
-                                  ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 border-stone-900 dark:border-amber-500 shadow-sm'
+                                  ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 border-stone-900 dark:border-white shadow-xs'
                                   : 'bg-transparent text-stone-600 dark:text-stone-400 border-transparent hover:bg-stone-100 dark:hover:bg-stone-800'
                               }`}
                             >
@@ -295,7 +299,7 @@ export const StudentDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-400 text-center">
+              <div className="pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-400 text-center font-mono">
                 AttendEase
               </div>
             </div>

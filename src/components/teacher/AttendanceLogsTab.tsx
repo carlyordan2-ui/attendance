@@ -7,9 +7,9 @@ import {
   Download, 
   CheckCircle2, 
   Clock, 
-  XCircle,
-  FileCheck2,
-  Table
+  XCircle, 
+  FileCheck2, 
+  Table 
 } from 'lucide-react';
 
 export const AttendanceLogsTab: React.FC = () => {
@@ -155,14 +155,14 @@ export const AttendanceLogsTab: React.FC = () => {
     <div className="space-y-6">
       
       {/* Header & Filter Controls */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-xs folio-card space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700">
               <FileText className="h-6 w-6 stroke-[1.75]" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
                 Attendance Logs & Export
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -176,9 +176,9 @@ export const AttendanceLogsTab: React.FC = () => {
               onClick={handleExportSummaryCSV}
               id="export-summary-csv-btn"
               disabled={records.length === 0}
-              className="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-200 font-heading font-bold text-xs transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer disabled:opacity-50"
+              className="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-stone-900 dark:hover:border-white bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-200 font-heading font-bold text-xs transition-all flex items-center space-x-1.5 shadow-2xs cursor-pointer disabled:opacity-50"
             >
-              <Table className="h-3.5 w-3.5 text-amber-600" />
+              <Table className="h-3.5 w-3.5 text-stone-500" />
               <span>Summary CSV</span>
             </button>
 
@@ -186,7 +186,7 @@ export const AttendanceLogsTab: React.FC = () => {
               onClick={handleExportCSV}
               id="export-attendance-csv-btn"
               disabled={filteredRecords.length === 0}
-              className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-2xs cursor-pointer disabled:opacity-50 border border-stone-900 dark:border-white"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Export Raw CSV</span>
@@ -209,7 +209,7 @@ export const AttendanceLogsTab: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Name or ID..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+                className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
               />
             </div>
           </div>
@@ -222,7 +222,7 @@ export const AttendanceLogsTab: React.FC = () => {
             <select
               value={selectedSubjectId}
               onChange={(e) => setSelectedSubjectId(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 font-heading font-bold"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-heading font-bold"
             >
               <option value="all">All Subjects</option>
               {subjects.map((s) => (
@@ -241,7 +241,7 @@ export const AttendanceLogsTab: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 font-heading font-bold"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-heading font-bold"
             >
               <option value="all">All Statuses</option>
               <option value="present">Present</option>
@@ -260,7 +260,7 @@ export const AttendanceLogsTab: React.FC = () => {
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-mono focus:outline-none focus:border-stone-900 dark:focus:border-white"
             />
           </div>
 
@@ -268,12 +268,12 @@ export const AttendanceLogsTab: React.FC = () => {
       </div>
 
       {/* Log Table / Cards */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-sm folio-card">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-xs folio-card">
         
         {/* Mobile & Tablet Card Layout (< 768px) */}
         <div className="block md:hidden divide-y divide-stone-100 dark:divide-stone-800">
           {filteredRecords.length === 0 ? (
-            <div className="p-8 text-center text-xs text-stone-500">
+            <div className="p-8 text-center text-xs text-stone-500 font-sans">
               No attendance records found.
             </div>
           ) : (
@@ -284,7 +284,7 @@ export const AttendanceLogsTab: React.FC = () => {
                     <span className="font-heading font-bold text-stone-900 dark:text-white text-sm">
                       {rec.studentName}
                     </span>
-                    <span className="ml-2 font-mono text-[10px] text-amber-600 dark:text-amber-400">
+                    <span className="ml-2 font-mono text-[10px] text-stone-500 dark:text-stone-400">
                       #{rec.studentUserCode}
                     </span>
                   </div>
@@ -314,7 +314,7 @@ export const AttendanceLogsTab: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="text-[11px] text-stone-400 flex items-center justify-between">
+                <div className="text-[11px] text-stone-400 flex items-center justify-between font-sans">
                   <span>By: {rec.markedByName} {rec.sessionCodeVerified && ' (PIN)'}</span>
                   {rec.note && <span className="italic text-stone-500">Note: {rec.note}</span>}
                 </div>
@@ -339,7 +339,7 @@ export const AttendanceLogsTab: React.FC = () => {
             <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
               {filteredRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-stone-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-stone-500 font-sans">
                     No attendance records found.
                   </td>
                 </tr>
@@ -362,7 +362,7 @@ export const AttendanceLogsTab: React.FC = () => {
                       <div className="font-heading font-bold text-stone-900 dark:text-white">
                         {rec.studentName}
                       </div>
-                      <div className="text-[10px] text-amber-600 dark:text-amber-400 font-mono">
+                      <div className="text-[10px] text-stone-500 dark:text-stone-400 font-mono">
                         #{rec.studentUserCode}
                       </div>
                     </td>
@@ -372,7 +372,7 @@ export const AttendanceLogsTab: React.FC = () => {
                       <div className="font-heading font-bold text-stone-900 dark:text-white">
                         {rec.subjectName}
                       </div>
-                      <span className="font-mono text-[10px] text-amber-600 dark:text-amber-400">
+                      <span className="font-mono text-[10px] text-stone-500 dark:text-stone-400">
                         {rec.subjectCode}
                       </span>
                     </td>

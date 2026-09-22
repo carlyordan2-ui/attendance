@@ -6,8 +6,8 @@ import {
   subscribeAllAttendance, 
   blockStudentFromSubject, 
   unblockStudentFromSubject, 
-  subscribeAllUsers,
-  bulkImportRosterToSubject
+  subscribeAllUsers, 
+  bulkImportRosterToSubject 
 } from '../../services/attendanceService';
 import { useAuth } from '../../contexts/AuthContext';
 import { AvatarDisplay } from '../common/AvatarDisplay';
@@ -16,16 +16,14 @@ import {
   MessageSquare, 
   UserX, 
   Unlock, 
-  ShieldAlert,
-  Video,
-  UserPlus,
-  Upload,
-  Download,
-  Search,
-  CheckCircle2,
-  FileSpreadsheet,
-  X,
-  AlertCircle
+  ShieldAlert, 
+  Video, 
+  UserPlus, 
+  Upload, 
+  Download, 
+  Search, 
+  CheckCircle2, 
+  X 
 } from 'lucide-react';
 
 interface RosterAndStatsTabProps {
@@ -153,12 +151,10 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
 
     setIsImporting(true);
     try {
-      // Lines can be: "ID, Name" or "Name, ID" or just "ID"
       const lines = rawImportText.split('\n').map(l => l.trim()).filter(Boolean);
       const studentRows: Array<{ name: string; userCode: string; email?: string }> = [];
 
       for (const line of lines) {
-        // Skip header lines like "ID,Name"
         if (line.toLowerCase().startsWith('id') || line.toLowerCase().startsWith('student')) continue;
 
         const parts = line.split(/[,\t;|]/).map(p => p.trim().replace(/^["']|["']$/g, ''));
@@ -266,14 +262,14 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
     <div className="space-y-6">
       
       {/* Header & Subject Selector */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-xs folio-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700">
               <Users className="h-6 w-6 stroke-[1.75]" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
                 Class Roster & Analytics
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -286,7 +282,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
             <button
               onClick={() => setShowImportModal(true)}
               id="bulk-import-roster-btn"
-              className="px-3.5 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-heading font-bold text-xs transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer"
+              className="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-stone-900 dark:hover:border-white bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-heading font-bold text-xs transition-all flex items-center space-x-1.5 shadow-2xs cursor-pointer"
             >
               <UserPlus className="h-3.5 w-3.5" />
               <span>Bulk Import Roster</span>
@@ -296,7 +292,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
               onClick={handleExportRosterCSV}
               id="export-roster-csv-btn"
               disabled={enrolledStudentsForSubject.length === 0}
-              className="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-xs cursor-pointer disabled:opacity-50"
+              className="px-3.5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 shadow-2xs cursor-pointer disabled:opacity-50 border border-stone-900 dark:border-white"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Export Roster CSV</span>
@@ -317,9 +313,9 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                     href={currentSubject.meetUrl.startsWith('http') ? currentSubject.meetUrl : `https://${currentSubject.meetUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-heading font-bold text-xs transition-colors"
+                    className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 font-heading font-bold text-xs transition-colors border border-stone-200 dark:border-stone-700"
                   >
-                    <Video className="h-3.5 w-3.5 text-amber-600" />
+                    <Video className="h-3.5 w-3.5 text-stone-500" />
                     <span>Join Meeting</span>
                   </a>
                 )}
@@ -334,7 +330,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                 <select
                   value={selectedSubjectId}
                   onChange={(e) => setSelectedSubjectId(e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:border-stone-900 dark:focus:border-white"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -348,6 +344,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                 <span className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider block">Enrolled</span>
                 <span className="text-xl font-heading font-bold text-stone-900 dark:text-white">{totalRosterCount}</span>
               </div>
+
               <div className="text-right pl-4 border-l border-stone-200 dark:border-stone-800">
                 <span className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider block">Average Rate</span>
                 <span className="text-xl font-heading font-bold text-stone-900 dark:text-white">{avgAttendancePct}%</span>
@@ -365,14 +362,14 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
               value={rosterSearch}
               onChange={(e) => setRosterSearch(e.target.value)}
               placeholder="Search enrolled students by name or ID..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
         </div>
       </div>
 
       {/* Roster Table */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-sm folio-card">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-xs folio-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-stone-50 dark:bg-stone-900/80 text-stone-500 dark:text-stone-400 font-mono text-[10px] uppercase tracking-wider border-b border-stone-200 dark:border-stone-800">
@@ -410,7 +407,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                             <div className="font-heading font-bold text-stone-900 dark:text-white">
                               {st.studentName}
                             </div>
-                            <div className="text-[10px] text-amber-600 dark:text-amber-400 font-mono">
+                            <div className="text-[10px] text-stone-500 dark:text-stone-400 font-mono">
                               #{st.studentUserCode}
                             </div>
                           </div>
@@ -428,13 +425,13 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                           <span className={`font-mono font-bold text-xs ${
                             stats.percentage >= 85 
                               ? 'text-emerald-600 dark:text-emerald-400' 
-                              : 'text-amber-600 dark:text-amber-400'
+                              : 'text-stone-700 dark:text-stone-300'
                           }`}>
                             {stats.percentage}%
                           </span>
                           <div className="w-16 bg-stone-200 dark:bg-stone-800 h-1.5 rounded-full overflow-hidden">
                             <div 
-                              className={`h-full ${stats.percentage >= 85 ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                              className={`h-full ${stats.percentage >= 85 ? 'bg-emerald-500' : 'bg-stone-500'}`} 
                               style={{ width: `${stats.percentage}%` }}
                             />
                           </div>
@@ -464,7 +461,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                           {onStartDirectMessage && (
                             <button
                               onClick={() => onStartDirectMessage(st.studentId, st.studentName)}
-                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors cursor-pointer border border-stone-200 dark:border-stone-700"
                               title="Message"
                             >
                               <MessageSquare className="h-3.5 w-3.5" />
@@ -473,7 +470,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                           <button
                             onClick={() => handleBlockStudent(st.studentId, st.studentName)}
                             disabled={isProcessingBlock}
-                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900 text-rose-600 dark:text-rose-400 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900 text-rose-600 dark:text-rose-400 transition-colors cursor-pointer border border-rose-200 dark:border-rose-900/50"
                             title="Block student"
                           >
                             <UserX className="h-3.5 w-3.5" />
@@ -523,7 +520,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                 <button
                   onClick={() => handleUnblockStudent(b.uid)}
                   disabled={isProcessingBlock}
-                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-heading font-bold transition-colors shrink-0 cursor-pointer"
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-heading font-bold transition-colors shrink-0 cursor-pointer border border-stone-200 dark:border-stone-700"
                 >
                   <Unlock className="h-3 w-3 text-emerald-500" />
                   <span>Unblock</span>
@@ -536,29 +533,29 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
 
       {/* Bulk Import Modal */}
       {showImportModal && currentSubject && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111318] rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-5 folio-card">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <div>
-                <h3 className="font-display font-bold text-lg text-stone-900 dark:text-stone-100 flex items-center space-x-2">
-                  <Upload className="h-5 w-5 text-amber-600" />
+                <h3 className="font-display font-bold italic text-lg text-stone-900 dark:text-stone-100 flex items-center space-x-2">
+                  <Upload className="h-5 w-5 text-stone-500" />
                   <span>Bulk Import Student Roster</span>
                 </h3>
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-stone-500 font-sans">
                   Target Course: <strong>{currentSubject.code} — {currentSubject.name}</strong>
                 </p>
               </div>
               <button
                 onClick={() => setShowImportModal(false)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleBulkImport} className="space-y-4">
+            <form onSubmit={handleBulkImport} className="space-y-4 font-sans">
               <div className="space-y-2">
-                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300">
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
                   Upload CSV File or Paste Roster Lines
                 </label>
                 
@@ -567,7 +564,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                   type="file"
                   accept=".csv,.txt"
                   onChange={handleFileUpload}
-                  className="block w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-800 dark:file:text-amber-300 hover:file:bg-amber-500/20 cursor-pointer"
+                  className="block w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border file:border-stone-200 dark:file:border-stone-800 file:text-xs file:font-heading file:font-bold file:bg-stone-100 dark:file:bg-stone-800 file:text-stone-900 dark:file:text-stone-100 hover:file:bg-stone-200 dark:hover:file:bg-stone-700 cursor-pointer"
                 />
 
                 {/* Text Area */}
@@ -577,7 +574,7 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                   onChange={(e) => setRawImportText(e.target.value)}
                   placeholder={`Paste student lines, e.g.:\n1001, John Doe\n1002, Alice Smith\n1003, Bob Johnson`}
                   required
-                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs font-mono text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs font-mono text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white"
                 />
                 <p className="text-[11px] text-stone-500">
                   Format accepted: <code>StudentCode, Student Name</code> or just <code>StudentCode</code> per line.
@@ -588,14 +585,14 @@ export const RosterAndStatsTab: React.FC<RosterAndStatsTabProps> = ({ onStartDir
                 <button
                   type="button"
                   onClick={() => setShowImportModal(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-heading font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isImporting || !rawImportText.trim()}
-                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold cursor-pointer transition-all flex items-center space-x-1.5 disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 text-xs font-heading font-bold uppercase tracking-wider cursor-pointer transition-all flex items-center space-x-1.5 disabled:opacity-50 border border-stone-900 dark:border-white shadow-2xs"
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   <span>{isImporting ? 'Enrolling Students...' : 'Enroll Students in Batch'}</span>

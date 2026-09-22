@@ -15,9 +15,7 @@ import {
   FileCheck2,
   HelpCircle,
   X,
-  Send,
-  ShieldCheck,
-  AlertCircle
+  Send
 } from 'lucide-react';
 
 export const AttendanceHistoryTab: React.FC = () => {
@@ -112,14 +110,14 @@ export const AttendanceHistoryTab: React.FC = () => {
     <div className="space-y-6">
       
       {/* Header & Controls */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-2xs folio-card space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-900 text-stone-900 dark:text-stone-100 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-800">
               <Calendar className="h-6 w-6 stroke-[1.75]" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
                 Attendance History
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -144,7 +142,7 @@ export const AttendanceHistoryTab: React.FC = () => {
             <select
               value={selectedSubjectId}
               onChange={(e) => setSelectedSubjectId(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:border-stone-900 dark:focus:border-white"
             >
               <option value="all">All Subjects</option>
               {subjects.map((s) => (
@@ -163,7 +161,7 @@ export const AttendanceHistoryTab: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-heading font-bold focus:outline-none focus:border-stone-900 dark:focus:border-white"
             >
               <option value="all">All Statuses</option>
               <option value="present">Present</option>
@@ -182,7 +180,7 @@ export const AttendanceHistoryTab: React.FC = () => {
               type="date"
               value={searchDate}
               onChange={(e) => setSearchDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs font-mono focus:outline-none focus:border-stone-900 dark:focus:border-white"
             />
           </div>
 
@@ -191,9 +189,9 @@ export const AttendanceHistoryTab: React.FC = () => {
 
       {/* Pending Correction Requests Tracker */}
       {disputes.length > 0 && (
-        <div className="p-5 rounded-3xl bg-amber-500/10 border border-amber-500/20 space-y-3">
+        <div className="p-5 rounded-3xl bg-stone-100/70 dark:bg-stone-900/70 border border-stone-300 dark:border-stone-700 space-y-3">
           <div className="flex items-center space-x-2">
-            <HelpCircle className="h-4 w-4 text-amber-600" />
+            <HelpCircle className="h-4 w-4 text-stone-700 dark:text-stone-300" />
             <h4 className="text-xs font-heading font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100">
               My Submitted Correction Requests ({disputes.length})
             </h4>
@@ -201,9 +199,9 @@ export const AttendanceHistoryTab: React.FC = () => {
 
           <div className="grid gap-2 sm:grid-cols-2">
             {disputes.map(d => (
-              <div key={d.id} className="p-3 rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-amber-500/20 text-xs space-y-1">
+              <div key={d.id} className="p-3 rounded-2xl bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-stone-900 dark:text-stone-100">{d.subjectCode} — {d.date}</span>
+                  <span className="font-bold text-stone-900 dark:text-stone-100 font-mono">{d.subjectCode} — {d.date}</span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
                     d.status === 'pending'
                       ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
@@ -221,7 +219,7 @@ export const AttendanceHistoryTab: React.FC = () => {
                   "{d.reason}"
                 </div>
                 {d.teacherNote && (
-                  <div className="text-[11px] font-bold text-amber-800 dark:text-amber-300 pt-1">
+                  <div className="text-[11px] font-mono text-stone-700 dark:text-stone-300 pt-1">
                     Teacher Note: {d.teacherNote}
                   </div>
                 )}
@@ -232,7 +230,7 @@ export const AttendanceHistoryTab: React.FC = () => {
       )}
 
       {/* History Table */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-sm folio-card">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-2xs folio-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-stone-50 dark:bg-stone-900/80 text-stone-500 dark:text-stone-400 font-mono text-[10px] uppercase tracking-wider border-b border-stone-200 dark:border-stone-800">
@@ -271,7 +269,7 @@ export const AttendanceHistoryTab: React.FC = () => {
                       <div className="font-heading font-bold text-stone-900 dark:text-white">
                         {rec.subjectName}
                       </div>
-                      <span className="font-mono text-[10px] text-amber-700 dark:text-amber-400">
+                      <span className="font-mono text-[10px] text-stone-500 dark:text-stone-400">
                         {rec.subjectCode}
                       </span>
                     </td>
@@ -297,11 +295,7 @@ export const AttendanceHistoryTab: React.FC = () => {
 
                     {/* Logged By */}
                     <td className="px-6 py-4 whitespace-nowrap text-stone-600 dark:text-stone-300">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
-                        rec.markedBy === 'teacher' 
-                          ? 'bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900' 
-                          : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'
-                      }`}>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700">
                         {rec.markedBy === 'teacher' ? `Teacher (${rec.markedByName})` : 'Self Check-In'}
                         {rec.sessionCodeVerified && ' (PIN)'}
                       </span>
@@ -316,7 +310,7 @@ export const AttendanceHistoryTab: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <button
                         onClick={() => handleOpenDispute(rec)}
-                        className="px-2.5 py-1 rounded-lg border border-stone-200 dark:border-stone-700 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-stone-600 dark:text-stone-300 hover:text-amber-700 text-[11px] font-bold transition-colors cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 text-[11px] font-bold transition-colors cursor-pointer"
                       >
                         Dispute
                       </button>
@@ -336,14 +330,14 @@ export const AttendanceHistoryTab: React.FC = () => {
           <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-md w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <HelpCircle className="h-5 w-5 text-amber-600" />
-                <h3 className="font-display font-bold text-base text-stone-900 dark:text-stone-100">
+                <HelpCircle className="h-5 w-5 text-stone-700 dark:text-stone-300" />
+                <h3 className="font-display font-bold italic text-base text-stone-900 dark:text-stone-100">
                   Request Attendance Correction
                 </h3>
               </div>
               <button
                 onClick={() => setDisputeRecord(null)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -407,7 +401,7 @@ export const AttendanceHistoryTab: React.FC = () => {
                   value={disputeReason}
                   onChange={(e) => setDisputeReason(e.target.value)}
                   placeholder="Explain why this record should be corrected (e.g. submitted doctor excuse slip, wifi issue in lab)..."
-                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
                 />
               </div>
 
@@ -415,14 +409,14 @@ export const AttendanceHistoryTab: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setDisputeRecord(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer font-heading"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingDispute}
-                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold cursor-pointer transition-all flex items-center space-x-1.5"
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 text-xs font-heading font-bold cursor-pointer transition-all flex items-center space-x-1.5 border border-stone-900 dark:border-white"
                 >
                   <Send className="h-3.5 w-3.5" />
                   <span>{isSubmittingDispute ? 'Submitting...' : 'Send to Instructor'}</span>

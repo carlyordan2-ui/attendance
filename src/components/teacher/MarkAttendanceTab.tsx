@@ -23,10 +23,7 @@ import {
   FileCheck2,
   AlertCircle,
   HelpCircle,
-  X,
-  Sparkles,
-  Check,
-  Filter
+  X
 } from 'lucide-react';
 import { AvatarDisplay } from '../common/AvatarDisplay';
 
@@ -266,17 +263,17 @@ export const MarkAttendanceTab: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 shadow-sm folio-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 shadow-xs folio-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700">
             <CheckSquare className="h-6 w-6 stroke-[1.75]" />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+            <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
               Mark Attendance
             </h2>
             <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
-              Daily ledger with fraud-proof classroom PIN and excused absence tracking.
+              Daily ledger with classroom PIN and excused absence tracking.
             </p>
           </div>
         </div>
@@ -286,12 +283,12 @@ export const MarkAttendanceTab: React.FC = () => {
           {/* Dispute Badge Button */}
           <button
             onClick={() => setShowDisputesModal(true)}
-            className="relative px-3.5 py-2 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-900 font-heading font-bold text-xs tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer"
+            className="relative px-3.5 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:border-stone-900 dark:hover:border-white font-heading font-bold text-xs tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
           >
-            <HelpCircle className="h-3.5 w-3.5 text-amber-600" />
+            <HelpCircle className="h-3.5 w-3.5 text-stone-500" />
             <span>Disputes</span>
             {pendingDisputes.length > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full bg-amber-500 text-stone-950 text-[10px] font-mono font-bold">
+              <span className="px-1.5 py-0.2 rounded-full bg-stone-900 dark:bg-white text-white dark:text-stone-950 text-[10px] font-mono font-bold">
                 {pendingDisputes.length}
               </span>
             )}
@@ -300,10 +297,10 @@ export const MarkAttendanceTab: React.FC = () => {
           {/* Live Session PIN trigger */}
           <button
             onClick={() => setShowLivePinModal(true)}
-            className={`px-3.5 py-2 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs ${
+            className={`px-3.5 py-2 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs border ${
               currentSubject?.isSessionOpen
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse'
-                : 'bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950'
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 animate-pulse'
+                : 'bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 border-stone-900 dark:border-white'
             }`}
           >
             <KeyRound className="h-3.5 w-3.5" />
@@ -339,7 +336,7 @@ export const MarkAttendanceTab: React.FC = () => {
       )}
 
       {/* Filter and Date Selection Bar */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 shadow-sm folio-card grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="p-4 sm:p-5 rounded-3xl bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 shadow-xs folio-card grid grid-cols-1 sm:grid-cols-4 gap-3">
         {/* Term select */}
         <div>
           <label className="block text-[10px] font-mono font-bold text-stone-400 uppercase tracking-widest mb-1.5">
@@ -348,7 +345,7 @@ export const MarkAttendanceTab: React.FC = () => {
           <select
             value={selectedTerm}
             onChange={(e) => setSelectedTerm(e.target.value)}
-            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white"
           >
             <option value="all">All Terms</option>
             {availableTerms.map(t => (
@@ -365,7 +362,7 @@ export const MarkAttendanceTab: React.FC = () => {
           <select
             value={selectedSubjectId}
             onChange={(e) => setSelectedSubjectId(e.target.value)}
-            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white"
           >
             {filteredSubjects.length === 0 ? (
               <option value="">No subjects found</option>
@@ -388,7 +385,7 @@ export const MarkAttendanceTab: React.FC = () => {
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-mono font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-mono font-bold text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white"
           />
         </div>
 
@@ -404,7 +401,7 @@ export const MarkAttendanceTab: React.FC = () => {
               placeholder="Search by student name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+              className="w-full pl-9 pr-3 py-2 bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
         </div>
@@ -419,7 +416,7 @@ export const MarkAttendanceTab: React.FC = () => {
           <button
             onClick={() => handleMarkAll('present')}
             disabled={isSaving || enrolledStudents.length === 0}
-            className="px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs"
+            className="px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs border border-stone-900 dark:border-white"
           >
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>Mark All Present</span>
@@ -438,7 +435,7 @@ export const MarkAttendanceTab: React.FC = () => {
             <button
               onClick={handleSweepUnmarked}
               disabled={isSaving}
-              className="px-3 py-1.5 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs"
+              className="px-3 py-1.5 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
             >
               <AlertCircle className="h-3.5 w-3.5" />
               <span>Sweep Unmarked ({unrecordedCount}) as Absent</span>
@@ -479,7 +476,7 @@ export const MarkAttendanceTab: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-stone-900 dark:text-stone-100">
               No students found in current ledger
             </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto">
+            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto font-sans">
               {enrolledStudents.length === 0
                 ? 'No students are presently enrolled in this course.'
                 : 'No student matches your current filter criteria.'}
@@ -538,7 +535,7 @@ export const MarkAttendanceTab: React.FC = () => {
                     onClick={() => handleSetStudentStatus(student.studentId, student.studentName, student.studentUserCode, 'present')}
                     className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all cursor-pointer flex items-center space-x-1 ${
                       currentStatus === 'present'
-                        ? 'bg-emerald-600 text-white shadow-xs'
+                        ? 'bg-emerald-600 text-white shadow-2xs'
                         : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/60'
                     }`}
                   >
@@ -550,7 +547,7 @@ export const MarkAttendanceTab: React.FC = () => {
                     onClick={() => handleSetStudentStatus(student.studentId, student.studentName, student.studentUserCode, 'late')}
                     className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all cursor-pointer flex items-center space-x-1 ${
                       currentStatus === 'late'
-                        ? 'bg-amber-600 text-white shadow-xs'
+                        ? 'bg-amber-600 text-white shadow-2xs'
                         : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-amber-950/60'
                     }`}
                   >
@@ -562,7 +559,7 @@ export const MarkAttendanceTab: React.FC = () => {
                     onClick={() => setExcusedTargetStudent({ id: student.studentId, name: student.studentName, userCode: student.studentUserCode })}
                     className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all cursor-pointer flex items-center space-x-1 ${
                       currentStatus === 'excused'
-                        ? 'bg-sky-600 text-white shadow-xs'
+                        ? 'bg-sky-600 text-white shadow-2xs'
                         : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-sky-100 dark:hover:bg-sky-950/60'
                     }`}
                   >
@@ -574,7 +571,7 @@ export const MarkAttendanceTab: React.FC = () => {
                     onClick={() => handleSetStudentStatus(student.studentId, student.studentName, student.studentUserCode, 'absent')}
                     className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all cursor-pointer flex items-center space-x-1 ${
                       currentStatus === 'absent'
-                        ? 'bg-rose-600 text-white shadow-xs'
+                        ? 'bg-rose-600 text-white shadow-2xs'
                         : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-rose-100 dark:hover:bg-rose-950/60'
                     }`}
                   >
@@ -590,25 +587,25 @@ export const MarkAttendanceTab: React.FC = () => {
 
       {/* Live PIN Session Modal */}
       {showLivePinModal && currentSubject && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-md w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111318] rounded-3xl max-w-md w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-5 folio-card">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2.5">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center border border-stone-200 dark:border-stone-700">
                   <KeyRound className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-display font-bold text-lg text-stone-900 dark:text-stone-100">
+                  <h3 className="font-display font-bold italic text-lg text-stone-900 dark:text-stone-100">
                     Classroom Live PIN
                   </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
-                    Prevent proxy check-ins from outside class.
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
+                    Generate temporary session code for verification.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowLivePinModal(false)}
-                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -620,15 +617,15 @@ export const MarkAttendanceTab: React.FC = () => {
               </span>
               {currentSubject.isSessionOpen ? (
                 <>
-                  <div className="text-4xl font-mono font-black text-amber-600 dark:text-amber-400 tracking-wider">
+                  <div className="text-4xl font-mono font-black text-stone-900 dark:text-white tracking-wider">
                     #{currentSubject.activeSessionCode}
                   </div>
-                  <p className="text-xs text-stone-600 dark:text-stone-400 max-w-xs mx-auto">
+                  <p className="text-xs text-stone-600 dark:text-stone-400 max-w-xs mx-auto font-sans">
                     Project this code on the board. Students must submit this 4-digit code to complete self check-in.
                   </p>
                 </>
               ) : (
-                <div className="py-4 text-xs text-stone-500">
+                <div className="py-4 text-xs text-stone-500 font-sans">
                   Live session is currently closed. Click below to generate a new PIN and open check-in.
                 </div>
               )}
@@ -644,10 +641,10 @@ export const MarkAttendanceTab: React.FC = () => {
               <button
                 onClick={handleToggleLiveSession}
                 disabled={isGeneratingPin}
-                className={`px-4 py-2 rounded-xl text-xs font-bold text-white cursor-pointer transition-all ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all border ${
                   currentSubject.isSessionOpen
-                    ? 'bg-rose-600 hover:bg-rose-700'
-                    : 'bg-stone-900 dark:bg-amber-500 dark:text-stone-950 hover:opacity-90'
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white border-rose-600'
+                    : 'bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 border-stone-900 dark:border-white'
                 }`}
               >
                 {currentSubject.isSessionOpen ? 'Close Live Session' : 'Start 30-min PIN Session'}
@@ -659,32 +656,32 @@ export const MarkAttendanceTab: React.FC = () => {
 
       {/* Excused Note Modal */}
       {excusedTargetStudent && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-md w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111318] rounded-3xl max-w-md w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4 folio-card">
             <div className="flex items-center justify-between">
-              <h3 className="font-display font-bold text-base text-stone-900 dark:text-stone-100">
+              <h3 className="font-display font-bold italic text-base text-stone-900 dark:text-stone-100">
                 Log Excused Absence
               </h3>
               <button
                 onClick={() => setExcusedTargetStudent(null)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
               Marking <strong>{excusedTargetStudent.name}</strong> as Excused for {selectedDate}.
             </p>
 
             <div>
-              <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 mb-1">
+              <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 mb-1 font-heading">
                 Reason / Justification
               </label>
               <select
                 value={excusedReason}
                 onChange={(e) => setExcusedReason(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-heading text-stone-900 dark:text-stone-100 mb-2"
+                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-heading text-stone-900 dark:text-stone-100 mb-2 focus:outline-none focus:border-stone-900 dark:focus:border-white"
               >
                 <option value="Medical Certificate / Sick Leave">Medical Certificate / Sick Leave</option>
                 <option value="Authorized School Representation">Authorized School Representation</option>
@@ -697,7 +694,7 @@ export const MarkAttendanceTab: React.FC = () => {
                 placeholder="Or specify custom reason / ref ID..."
                 value={excusedReason}
                 onChange={(e) => setExcusedReason(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-stone-100"
+                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
               />
             </div>
 
@@ -730,18 +727,18 @@ export const MarkAttendanceTab: React.FC = () => {
 
       {/* Attendance Dispute Resolution Modal */}
       {showDisputesModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#16181e] rounded-3xl max-w-2xl w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111318] rounded-3xl max-w-2xl w-full p-6 border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4 max-h-[85vh] flex flex-col folio-card">
             <div className="flex items-center justify-between shrink-0">
               <div className="flex items-center space-x-2.5">
-                <HelpCircle className="h-5 w-5 text-amber-600" />
-                <h3 className="font-display font-bold text-lg text-stone-900 dark:text-stone-100">
+                <HelpCircle className="h-5 w-5 text-stone-500" />
+                <h3 className="font-display font-bold italic text-lg text-stone-900 dark:text-stone-100">
                   Student Attendance Disputes & Correction Requests
                 </h3>
               </div>
               <button
                 onClick={() => setShowDisputesModal(false)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -749,7 +746,7 @@ export const MarkAttendanceTab: React.FC = () => {
 
             <div className="overflow-y-auto space-y-3 flex-1 pr-1">
               {disputes.length === 0 ? (
-                <div className="py-12 text-center text-xs text-stone-500">
+                <div className="py-12 text-center text-xs text-stone-500 font-sans">
                   No attendance correction requests submitted.
                 </div>
               ) : (
@@ -764,7 +761,7 @@ export const MarkAttendanceTab: React.FC = () => {
                       </div>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase ${
                         d.status === 'pending'
-                          ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'
+                          ? 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border border-stone-200 dark:border-stone-700'
                           : d.status === 'approved'
                           ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
                           : 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
@@ -773,11 +770,11 @@ export const MarkAttendanceTab: React.FC = () => {
                       </span>
                     </div>
 
-                    <div className="text-stone-600 dark:text-stone-300">
+                    <div className="text-stone-600 dark:text-stone-300 font-sans">
                       Date: <strong className="font-mono">{d.date}</strong> | Marked: <span className="uppercase font-bold text-rose-600">{d.currentStatus}</span> → Requested: <span className="uppercase font-bold text-emerald-600">{d.requestedStatus}</span>
                     </div>
 
-                    <div className="p-2.5 rounded-xl bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 italic border border-stone-200 dark:border-stone-700">
+                    <div className="p-2.5 rounded-xl bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 italic border border-stone-200 dark:border-stone-700 font-sans">
                       "{d.reason}"
                     </div>
 
@@ -788,7 +785,7 @@ export const MarkAttendanceTab: React.FC = () => {
                           placeholder="Resolution note / comment..."
                           value={teacherResolutionNote}
                           onChange={(e) => setTeacherResolutionNote(e.target.value)}
-                          className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg px-2.5 py-1 text-xs text-stone-900 dark:text-stone-100 flex-1"
+                          className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg px-2.5 py-1 text-xs text-stone-900 dark:text-stone-100 flex-1 font-sans focus:outline-none focus:border-stone-900 dark:focus:border-white"
                         />
                         <div className="flex items-center space-x-1.5 shrink-0">
                           <button

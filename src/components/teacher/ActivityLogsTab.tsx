@@ -56,15 +56,15 @@ export const ActivityLogsTab: React.FC = () => {
     <div className="space-y-6">
       
       {/* Header & Controls */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-xs folio-card space-y-4">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700">
               <ShieldAlert className="h-6 w-6 stroke-[1.75]" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
                 Activity Logs
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -92,7 +92,7 @@ export const ActivityLogsTab: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ID, name, or event details..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+                className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export const ActivityLogsTab: React.FC = () => {
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 font-heading font-bold"
+              className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-white text-xs focus:outline-none focus:border-stone-900 dark:focus:border-white font-heading font-bold"
             >
               <option value="all">All Severities</option>
               <option value="warning">Warnings</option>
@@ -117,10 +117,10 @@ export const ActivityLogsTab: React.FC = () => {
       </div>
 
       {/* Log Feed */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-sm folio-card">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl overflow-hidden shadow-xs folio-card">
         <div className="divide-y divide-stone-100 dark:divide-stone-800">
           {filteredLogs.length === 0 ? (
-            <div className="p-8 text-center text-xs text-stone-500">
+            <div className="p-8 text-center text-xs text-stone-500 font-sans">
               No activity log entries found.
             </div>
           ) : (
@@ -147,7 +147,7 @@ export const ActivityLogsTab: React.FC = () => {
                   <div className="text-[11px] text-stone-500 space-x-2 font-sans">
                     <span>User: <strong>{log.userName}</strong></span>
                     <span>(#{log.userCode})</span>
-                    <span className="capitalize text-amber-600 dark:text-amber-400 font-semibold font-mono">• {log.role}</span>
+                    <span className="capitalize text-stone-600 dark:text-stone-400 font-semibold font-mono">• {log.role}</span>
                   </div>
                 </div>
               </div>

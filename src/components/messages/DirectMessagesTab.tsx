@@ -134,7 +134,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
   if (!currentUser) {
     return (
       <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-12 text-center text-stone-400 space-y-2 folio-card">
-        <Loader2 className="h-6 w-6 animate-spin mx-auto text-amber-500" />
+        <Loader2 className="h-6 w-6 animate-spin mx-auto text-stone-500" />
         <p className="text-xs font-sans">Loading messages...</p>
       </div>
     );
@@ -239,7 +239,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
   };
 
   return (
-    <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl shadow-sm overflow-hidden flex flex-col md:flex-row h-[680px] folio-card">
+    <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl shadow-xs overflow-hidden flex flex-col md:flex-row h-[680px] folio-card">
       
       {/* Left Pane: Contacts List */}
       <div
@@ -250,11 +250,11 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
         {/* Header */}
         <div className="p-4 border-b border-stone-100 dark:border-stone-800 space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-display font-bold text-stone-900 dark:text-white text-base flex items-center space-x-2">
-              <MessageSquare className="h-4 w-4 text-amber-600" />
-              <span>Messages</span>
+            <h3 className="font-display font-bold italic text-stone-900 dark:text-white text-base flex items-center space-x-2">
+              <MessageSquare className="h-4 w-4 text-stone-500" />
+              <span>Direct Messages</span>
             </h3>
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-300 border border-stone-200 dark:border-stone-700">
               {contactUids.length}
             </span>
           </div>
@@ -266,7 +266,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
               placeholder="Search contacts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-sans"
+              className="w-full pl-9 pr-3 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
         </div>
@@ -299,14 +299,14 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                   onClick={() => setSelectedUser(user)}
                   className={`w-full p-3.5 flex items-center space-x-3 text-left transition-colors cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500/10 dark:bg-amber-500/15'
+                      ? 'bg-stone-100 dark:bg-stone-800'
                       : 'hover:bg-stone-50 dark:hover:bg-stone-800/40'
                   }`}
                 >
                   <div className="relative">
                     <AvatarDisplay avatarId={user.avatar} name={user.name} size="md" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[9px] font-mono font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 bg-stone-900 dark:bg-white text-white dark:text-stone-950 text-[9px] font-mono font-bold rounded-full h-4 w-4 flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
@@ -319,7 +319,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                       </span>
                       <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase ${
                         user.role === 'teacher'
-                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                          ? 'bg-stone-900 text-white dark:bg-white dark:text-stone-950'
                           : 'bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300'
                       }`}>
                         {user.role}
@@ -330,7 +330,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                       {lastMessage ? (
                         lastMessage.attachmentUrl && !lastContent ? (
                           <span className="italic flex items-center">
-                            <Paperclip className="h-3 w-3 mr-1" />
+                            <Paperclip className="h-3 w-3 mr-1 text-stone-400" />
                             {lastMessage.attachmentName || 'File'}
                           </span>
                         ) : (
@@ -371,7 +371,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                   <div className="flex items-center space-x-2 text-[10px] text-stone-500 font-sans">
                     {selectedUser.userCode && <span className="font-mono">#{selectedUser.userCode}</span>}
                     {selectedUser.userCode && <span>•</span>}
-                    <span className="capitalize">{selectedUser.role}</span>
+                    <span className="capitalize font-mono">{selectedUser.role}</span>
                     {selectedUser.departmentOrLocation && (
                       <>
                         <span>•</span>
@@ -383,8 +383,8 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
               </div>
 
               {selectedUser.officeHours && (
-                <span className="hidden sm:inline-flex items-center text-[10px] font-heading font-bold text-amber-800 dark:text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
-                  <Clock className="h-3 w-3 mr-1" />
+                <span className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 px-2.5 py-1 rounded-full border border-stone-200 dark:border-stone-700">
+                  <Clock className="h-3 w-3 mr-1 text-stone-400" />
                   {selectedUser.officeHours}
                 </span>
               )}
@@ -394,7 +394,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
             <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
               {currentConversationMessages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-stone-400 space-y-2 font-sans">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center border border-stone-200 dark:border-stone-700">
                     <MessageSquare className="h-5 w-5" />
                   </div>
                   <p className="text-xs font-heading font-bold text-stone-700 dark:text-stone-300">
@@ -426,7 +426,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                       <div
                         className={`max-w-[78%] rounded-2xl p-3 space-y-1.5 shadow-2xs text-xs font-sans ${
                           isMe
-                            ? 'bg-stone-900 text-stone-100 dark:bg-amber-500 dark:text-stone-950 rounded-br-xs'
+                            ? 'bg-stone-900 text-stone-100 dark:bg-white dark:text-stone-950 rounded-br-xs border border-stone-900 dark:border-white'
                             : 'bg-white dark:bg-[#111318] text-stone-900 dark:text-white border border-stone-200/80 dark:border-stone-800 rounded-bl-xs'
                         }`}
                       >
@@ -469,7 +469,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                             ) : (
                               <div className="flex items-center justify-between space-x-2">
                                 <div className="flex items-center space-x-1.5 min-w-0">
-                                  <FileText className="h-4 w-4 shrink-0 text-amber-500" />
+                                  <FileText className="h-4 w-4 shrink-0 text-stone-400" />
                                   <span className="text-[11px] font-medium truncate max-w-[150px]">
                                     {msg.attachmentName || 'Document'}
                                   </span>
@@ -489,14 +489,14 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                         {/* Timestamp & Read Status */}
                         <div
                           className={`flex items-center justify-end space-x-1 text-[9px] font-mono ${
-                            isMe ? 'text-stone-400 dark:text-stone-700' : 'text-stone-400'
+                            isMe ? 'text-stone-400 dark:text-stone-600' : 'text-stone-400'
                           }`}
                         >
                           {timeFormatted && <span>{timeFormatted}</span>}
                           {isMe && (
                             <span>
                               {isMsgRead ? (
-                                <CheckCheck className="h-3 w-3 text-amber-400 dark:text-stone-900" title="Read" />
+                                <CheckCheck className="h-3 w-3 text-stone-300 dark:text-stone-700" title="Read" />
                               ) : (
                                 <Check className="h-3 w-3 opacity-60" title="Sent" />
                               )}
@@ -517,9 +517,9 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
 
             {/* Attachment Preview if selected */}
             {attachment && (
-              <div className="p-2.5 mx-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-between text-xs animate-in fade-in duration-100 font-sans">
+              <div className="p-2.5 mx-4 bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl flex items-center justify-between text-xs animate-in fade-in duration-100 font-sans">
                 <div className="flex items-center space-x-2 min-w-0">
-                  <FileText className="h-4 w-4 text-amber-600 shrink-0" />
+                  <FileText className="h-4 w-4 text-stone-500 shrink-0" />
                   <span className="font-heading font-bold text-stone-800 dark:text-stone-200 truncate max-w-xs">
                     {attachment.fileName || attachment.attachmentName}
                   </span>
@@ -530,7 +530,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setAttachment(null)}
-                  className="p-1 hover:bg-amber-500/20 rounded-full text-stone-500 cursor-pointer"
+                  className="p-1 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-full text-stone-500 cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -555,7 +555,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
                 title="Attach file"
-                className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-300 hover:border-amber-500 transition-colors shrink-0 cursor-pointer"
+                className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 text-stone-600 dark:text-stone-300 hover:border-stone-900 dark:hover:border-white transition-colors shrink-0 cursor-pointer"
               >
                 <Paperclip className="h-4 w-4" />
               </button>
@@ -565,16 +565,16 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
                 placeholder={`Message ${selectedUser.name}...`}
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
-                className="flex-1 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3.5 py-2.5 text-xs text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-sans"
+                className="flex-1 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3.5 py-2.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
               />
 
               <button
                 type="submit"
                 disabled={isSending || (!messageText.trim() && !attachment)}
-                className="p-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-bold text-xs disabled:opacity-40 transition-colors shrink-0 flex items-center justify-center cursor-pointer shadow-xs"
+                className="p-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-bold text-xs disabled:opacity-40 transition-colors shrink-0 flex items-center justify-center cursor-pointer shadow-2xs border border-stone-900 dark:border-white"
               >
                 {isSending ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white dark:border-stone-900/30 dark:border-t-stone-900 rounded-full animate-spin" />
                 ) : (
                   <Send className="h-4 w-4" />
                 )}
@@ -583,7 +583,7 @@ export const DirectMessagesTab: React.FC<DirectMessagesTabProps> = ({
           </>
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-center p-8 text-stone-400 space-y-2.5 font-sans">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center border border-stone-200 dark:border-stone-700">
               <MessageSquare className="h-6 w-6" />
             </div>
             <h3 className="font-heading font-bold text-stone-800 dark:text-stone-200 text-sm">

@@ -35,11 +35,11 @@ export const AvatarDisplay: React.FC<AvatarDisplayProps> = ({
     );
   }
 
-  // Initial fallback if no preset selected - architectural monogram style
+  // Initial fallback if no preset selected - architectural monochrome monogram style
   const initial = name ? name.trim().charAt(0).toUpperCase() : 'C';
   return (
     <div
-      className={`bg-stone-200/90 dark:bg-stone-800 text-stone-800 dark:text-amber-300 font-heading font-bold border border-stone-300/80 dark:border-stone-700/80 ${sizeClasses[size]} flex items-center justify-center shrink-0 shadow-2xs select-none ${className}`}
+      className={`bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white font-heading font-bold border border-stone-300 dark:border-stone-700 ${sizeClasses[size]} flex items-center justify-center shrink-0 shadow-2xs select-none ${className}`}
       title={name}
     >
       <span>{initial}</span>

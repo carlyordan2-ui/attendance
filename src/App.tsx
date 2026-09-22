@@ -17,15 +17,15 @@ const MainAppContent: React.FC = () => {
   // 1. Loading State
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-editorial-hero text-stone-900 dark:text-stone-100 transition-colors">
         <div className="flex flex-col items-center space-y-4 text-center">
-          <div className="h-16 w-16 rounded-2xl bg-stone-900 dark:bg-stone-800 text-amber-400 flex items-center justify-center shadow-xl shadow-amber-500/10 border border-stone-700/60 animate-pulse">
+          <div className="h-16 w-16 rounded-2xl bg-white dark:bg-stone-900 text-stone-900 dark:text-white flex items-center justify-center shadow-xl border border-stone-200 dark:border-stone-800 animate-pulse">
             <Compass className="h-8 w-8 stroke-[1.75]" />
           </div>
           <div className="space-y-1.5">
-            <h2 className="text-xl font-display font-bold tracking-tight">AttendEase</h2>
-            <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center justify-center space-x-2">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-500" />
+            <h2 className="text-xl font-display font-bold italic tracking-tight">AttendEase</h2>
+            <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center justify-center space-x-2 font-mono">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-stone-700 dark:text-stone-300" />
               <span>Loading attendance system...</span>
             </p>
           </div>
@@ -39,7 +39,7 @@ const MainAppContent: React.FC = () => {
     const activeRole = selectedRole || 'student';
 
     return (
-      <div className="min-h-screen flex flex-col bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors overflow-x-hidden">
+      <div className="min-h-screen flex flex-col bg-editorial-hero text-stone-900 dark:text-stone-100 transition-colors overflow-x-hidden">
         <Header />
         <main className="flex-1 flex flex-col items-center justify-start sm:justify-center px-3 sm:px-6 py-4 sm:py-8 w-full max-w-7xl mx-auto my-auto">
           {isRegistering ? (
@@ -65,13 +65,13 @@ const MainAppContent: React.FC = () => {
   // 3. Authenticated - Check User Status & Profile
   if (!userProfile) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors">
+      <div className="min-h-screen flex flex-col bg-editorial-hero text-stone-900 dark:text-stone-100 transition-colors">
         <Header />
         <main className="flex-grow flex items-center justify-center p-4">
           <div className="text-center space-y-4 max-w-sm">
             {profileLoadTimedOut ? (
               <>
-                <AlertOctagon className="h-8 w-8 mx-auto text-amber-500" />
+                <AlertOctagon className="h-8 w-8 mx-auto text-stone-600 dark:text-stone-300" />
                 <div className="space-y-1">
                   <p className="text-sm font-heading font-semibold">Connection Timeout</p>
                   <p className="text-xs text-stone-500">
@@ -86,7 +86,7 @@ const MainAppContent: React.FC = () => {
                 <div className="flex flex-col items-center gap-2 pt-2">
                   <button
                     onClick={retryProfileLoad}
-                    className="px-5 py-2.5 rounded-xl bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 text-xs font-heading font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-stone-900 dark:bg-white text-white dark:text-stone-950 text-xs font-heading font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer border border-stone-900 dark:border-white"
                   >
                     Retry
                   </button>
@@ -101,8 +101,8 @@ const MainAppContent: React.FC = () => {
               </>
             ) : (
               <>
-                <Loader2 className="h-8 w-8 animate-spin mx-auto text-amber-500" />
-                <p className="text-xs text-stone-500">Loading profile...</p>
+                <Loader2 className="h-8 w-8 animate-spin mx-auto text-stone-600 dark:text-stone-300" />
+                <p className="text-xs text-stone-500 font-mono">Loading profile...</p>
               </>
             )}
           </div>
@@ -116,7 +116,7 @@ const MainAppContent: React.FC = () => {
   // Pending Status Screen
   if (userProfile.status === 'pending') {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors">
+      <div className="min-h-screen flex flex-col bg-editorial-hero text-stone-900 dark:text-stone-100 transition-colors">
         <Header />
         <main className="flex-grow flex items-center justify-center p-4">
           <PendingApprovalState />
@@ -130,7 +130,7 @@ const MainAppContent: React.FC = () => {
   // Rejected Status Screen
   if (userProfile.status === 'rejected') {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors">
+      <div className="min-h-screen flex flex-col bg-editorial-hero text-stone-900 dark:text-stone-100 transition-colors">
         <Header />
         <main className="flex-grow flex items-center justify-center p-4">
           <div className="max-w-md w-full bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 text-center space-y-5 shadow-xl folio-card">
@@ -139,7 +139,7 @@ const MainAppContent: React.FC = () => {
             </div>
             <div>
               <span className="text-[10px] font-mono uppercase text-rose-500 tracking-widest font-bold block mb-1">REGISTRATION NOT APPROVED</span>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-white">Account Not Approved</h2>
+              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-white italic">Account Not Approved</h2>
               <p className="text-xs text-stone-600 dark:text-stone-400 mt-2 font-sans">
                 Your registration was not approved by a teacher.
               </p>
@@ -151,7 +151,7 @@ const MainAppContent: React.FC = () => {
             </div>
             <button
               onClick={logout}
-              className="w-full py-3 px-4 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer hover:opacity-90"
+              className="w-full py-3 px-4 rounded-xl bg-stone-900 dark:bg-white text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer hover:opacity-90 border border-stone-900 dark:border-white"
             >
               <LogOut className="h-4 w-4" />
               <span>Back to Login</span>
@@ -166,7 +166,7 @@ const MainAppContent: React.FC = () => {
 
   // Approved Status -> Render Role Dashboard
   return (
-    <div className="min-h-screen w-full flex flex-col bg-[#F9F8F5] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 bg-atelier-grid transition-colors overflow-x-hidden">
+    <div className="min-h-screen w-full flex flex-col bg-data-canvas text-stone-900 dark:text-stone-100 transition-colors overflow-x-hidden">
       <Header />
       <main className="flex-grow w-full">
         {userProfile.role === 'teacher' ? (

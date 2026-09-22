@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types';
 import { 
-  Lock, 
   User, 
-  LogIn, 
   GraduationCap, 
   ShieldCheck, 
   AlertCircle,
   Eye,
   EyeOff,
-  Compass,
   KeyRound,
   ArrowRight
 } from 'lucide-react';
@@ -54,32 +51,32 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       
       {/* Editorial Header */}
       <div className="text-center mb-6 sm:mb-8 space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-display font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-display font-bold italic text-stone-900 dark:text-stone-100 tracking-tight">
           Sign In
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 max-w-sm mx-auto font-sans">
+        <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 max-w-sm mx-auto font-sans">
           Sign in to your account to view attendance and classes.
         </p>
       </div>
 
       {/* Main Plate Card */}
-      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-xl shadow-stone-900/5 dark:shadow-black/40 backdrop-blur-sm folio-card">
+      <div className="relative bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-9 shadow-2xl shadow-stone-900/5 dark:shadow-black/50 backdrop-blur-md folio-card">
         
         {/* Corner Marks */}
-        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 select-none">+</div>
-        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 select-none">+</div>
+        <div className="absolute top-3 left-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute top-3 right-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute bottom-3 left-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
+        <div className="absolute bottom-3 right-3 text-[9px] font-mono text-stone-400 dark:text-stone-600 select-none">+</div>
 
         {/* Role Switch */}
-        <div className="mb-7 bg-stone-100/90 dark:bg-stone-900/90 p-1.5 rounded-2xl border border-stone-200/90 dark:border-stone-800 flex items-center gap-1.5">
+        <div className="mb-8 bg-stone-100 dark:bg-stone-900 p-1.5 rounded-2xl border border-stone-200 dark:border-stone-800 flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => onRoleChange('student')}
             className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               !isTeacher
-                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
+                ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
             }`}
           >
             <GraduationCap className="h-4 w-4 shrink-0" />
@@ -91,8 +88,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             onClick={() => onRoleChange('teacher')}
             className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-heading font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               isTeacher
-                ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 shadow-md shadow-amber-500/10'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-200'
+                ? 'bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
             }`}
           >
             <ShieldCheck className="h-4 w-4 shrink-0" />
@@ -103,21 +100,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300 text-xs flex items-start space-x-3">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600" />
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" />
             <div className="leading-relaxed font-sans">{error}</div>
           </div>
         )}
 
-        {/* Credentials Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Credentials Form with Editorial Underlined Rows */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           
           {/* User Code Field (ID) */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
               {isTeacher ? 'Teacher ID' : 'Student ID'}
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+              <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                 <User className="h-4 w-4" />
               </div>
               <input
@@ -127,21 +124,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 value={userCode}
                 onChange={(e) => setUserCode(e.target.value)}
                 placeholder={isTeacher ? 'e.g. T-2001' : 'e.g. S-10045'}
-                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-wide"
+                className="w-full pl-8 pr-3 py-2.5 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-mono tracking-wide placeholder:text-stone-400 dark:placeholder:text-stone-600"
               />
             </div>
-            <p className="mt-1 text-[11px] text-stone-400">
+            <p className="text-[10px] text-stone-400 font-mono">
               Enter your assigned ID code.
             </p>
           </div>
 
           {/* Password Field */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
               Password
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <div className="relative border-b border-stone-300 dark:border-stone-700 focus-within:border-stone-900 dark:focus-within:border-white transition-colors">
+              <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none text-stone-400">
                 <KeyRound className="h-4 w-4" />
               </div>
               <input
@@ -151,12 +148,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-10 pr-10 py-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-[#0A0B0E] text-stone-900 dark:text-white text-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-mono tracking-widest"
+                className="w-full pl-8 pr-10 py-2.5 bg-transparent text-stone-900 dark:text-white text-sm focus:outline-none font-mono tracking-widest placeholder:text-stone-400 dark:placeholder:text-stone-600"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-1 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -168,7 +165,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             type="submit"
             disabled={isSubmitting}
             id="login-submit-btn"
-            className="w-full py-3.5 px-5 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-gradient-to-r dark:from-amber-500 dark:to-amber-600 dark:hover:from-amber-400 dark:hover:to-amber-500 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-stone-900/10 dark:shadow-amber-500/20 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-3.5 px-5 mt-2 rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 border border-stone-900 dark:border-white"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
@@ -189,7 +186,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             <button
               onClick={onSwitchToRegister}
               id="switch-to-register-btn"
-              className="font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+              className="font-bold text-stone-900 dark:text-white underline underline-offset-4 decoration-stone-300 dark:decoration-stone-700 hover:decoration-stone-900 dark:hover:decoration-white cursor-pointer transition-colors"
             >
               Register here →
             </button>

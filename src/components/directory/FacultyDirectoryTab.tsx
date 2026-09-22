@@ -62,14 +62,14 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-sm folio-card space-y-4">
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 shadow-xs folio-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 flex items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700">
               <Users className="h-6 w-6 stroke-[1.75]" />
             </div>
             <div>
-              <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-100">
+              <h2 className="text-xl font-display font-bold italic text-stone-900 dark:text-stone-100">
                 Faculty Directory
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
@@ -82,7 +82,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
             <span className="text-[10px] font-mono font-bold text-stone-400 uppercase tracking-wider block">
               Faculty
             </span>
-            <span className="text-2xl font-heading font-bold text-stone-900 dark:text-stone-100">
+            <span className="text-2xl font-heading font-bold text-stone-900 dark:text-stone-100 font-mono">
               {teachers.length}
             </span>
           </div>
@@ -97,7 +97,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
               placeholder="Search faculty..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-sans"
+              className="w-full pl-9 pr-4 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
 
@@ -105,7 +105,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
-              className="px-3 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-heading font-bold text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500"
+              className="px-3 py-2 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-mono font-bold text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
             >
               <option value="all">All Departments</option>
               {departments.map((dept) => (
@@ -131,17 +131,17 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
             return (
               <div
                 key={teacher.uid}
-                className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 sm:p-6 shadow-xs hover:border-amber-500/30 transition-all flex flex-col justify-between space-y-4 folio-card"
+                className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 sm:p-6 shadow-2xs hover:border-stone-400 dark:hover:border-stone-600 transition-all flex flex-col justify-between space-y-4 folio-card"
               >
                 <div className="space-y-4">
                   {/* Top: Avatar & Basic Info */}
                   <div className="flex items-start space-x-3.5">
                     <AvatarDisplay avatarId={teacher.avatar} name={teacher.name} size="lg" />
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-heading font-bold text-stone-900 dark:text-white text-base truncate">
+                      <h3 className="font-display font-bold text-stone-900 dark:text-white text-base truncate">
                         {teacher.name}
                       </h3>
-                      <p className="text-[11px] font-mono text-amber-700 dark:text-amber-400 truncate">
+                      <p className="text-[11px] font-mono text-stone-600 dark:text-stone-300 truncate">
                         {teacher.departmentOrLocation || 'Department'}
                       </p>
                       <span className="inline-block font-mono text-[10px] text-stone-400">
@@ -165,14 +165,14 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                     </div>
                     {teacher.officeHours && (
                       <div className="flex items-center space-x-2 truncate">
-                        <Clock className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                        <span className="truncate">Hours: {teacher.officeHours}</span>
+                        <Clock className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                        <span className="truncate font-mono text-[11px]">Hours: {teacher.officeHours}</span>
                       </div>
                     )}
                     {teacher.phone && (
                       <div className="flex items-center space-x-2 truncate">
                         <Phone className="h-3.5 w-3.5 text-stone-400 shrink-0" />
-                        <span className="truncate">{teacher.phone}</span>
+                        <span className="truncate font-mono text-[11px]">{teacher.phone}</span>
                       </div>
                     )}
                   </div>
@@ -190,7 +190,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                         {facultySubjects.map((sub) => (
                           <span
                             key={sub.id}
-                            className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-800 dark:text-amber-300 font-mono font-bold text-[10px] border border-amber-500/20"
+                            className="px-2 py-0.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-mono font-bold text-[10px] border border-stone-200 dark:border-stone-700"
                             title={`${sub.code}: ${sub.name}`}
                           >
                             {sub.code}
@@ -208,7 +208,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                           href={teacher.socialLinks.website.startsWith('http') ? teacher.socialLinks.website : `https://${teacher.socialLinks.website}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-amber-600 transition-colors"
+                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors"
                           title="Website"
                         >
                           <Globe className="h-3.5 w-3.5" />
@@ -219,7 +219,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                           href={teacher.socialLinks.linkedin.startsWith('http') ? teacher.socialLinks.linkedin : `https://${teacher.socialLinks.linkedin}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-amber-600 transition-colors"
+                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors"
                           title="LinkedIn"
                         >
                           <Linkedin className="h-3.5 w-3.5" />
@@ -230,7 +230,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                           href={teacher.socialLinks.twitter.startsWith('http') ? teacher.socialLinks.twitter : `https://x.com/${teacher.socialLinks.twitter.replace('@', '')}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-amber-600 transition-colors"
+                          className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors"
                           title="Twitter"
                         >
                           <Twitter className="h-3.5 w-3.5" />
@@ -250,7 +250,7 @@ export const FacultyDirectoryTab: React.FC<FacultyDirectoryTabProps> = ({
                         onStartConversation(teacher);
                       }
                     }}
-                    className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-xs"
+                    className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-2xs border border-stone-900 dark:border-white"
                   >
                     <MessageSquare className="h-3.5 w-3.5" />
                     <span>Message</span>

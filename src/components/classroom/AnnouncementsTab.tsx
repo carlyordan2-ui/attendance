@@ -7,26 +7,22 @@ import {
   MessageSquare, 
   Send, 
   Search, 
-  Filter, 
-  Calendar, 
   X, 
-  UserCheck,
-  Paperclip,
-  FileText,
-  Download,
-  Lock,
-  Eye,
-  Users,
-  Video,
-  ExternalLink,
-  Copy,
-  Check
+  Paperclip, 
+  FileText, 
+  Download, 
+  Lock, 
+  Users, 
+  Video, 
+  ExternalLink, 
+  Copy, 
+  Check 
 } from 'lucide-react';
 import { 
   UserProfile, 
   Subject, 
   Announcement, 
-  AnnouncementComment,
+  AnnouncementComment, 
   AnnouncementAudience 
 } from '../../types';
 import { 
@@ -34,10 +30,10 @@ import {
   createAnnouncement, 
   deleteAnnouncement, 
   subscribeAnnouncementComments, 
-  addAnnouncementComment,
-  deleteAnnouncementComment,
-  updateSubject,
-  normalizeMeetUrl
+  addAnnouncementComment, 
+  deleteAnnouncementComment, 
+  updateSubject, 
+  normalizeMeetUrl 
 } from '../../services/attendanceService';
 import { processFileUpload, FileUploadResult } from '../../utils/fileUpload';
 import { AvatarDisplay } from '../common/AvatarDisplay';
@@ -64,7 +60,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Manage / Save Meet Link Modal state (next to New Announcement)
+  // Manage / Save Meet Link Modal state
   const [isManagingMeetLink, setIsManagingMeetLink] = useState(false);
   const [targetMeetSubjectId, setTargetMeetSubjectId] = useState<string>('');
   const [targetMeetUrl, setTargetMeetUrl] = useState<string>('');
@@ -124,7 +120,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
     if (formSubjectId !== 'all') {
       subWithMeet = subjects.find(s => s.id === formSubjectId);
     } else {
-      subWithMeet = subjects.find(s => !!s.meetUrl);
+      subWithMeet = subjects.find(s => !s.meetUrl);
     }
 
     if (subWithMeet?.meetUrl) {
@@ -232,18 +228,18 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
     <div className="space-y-6">
       
       {/* Stream Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-800 to-slate-900 p-6 sm:p-8 text-white shadow-xl overflow-hidden">
-        <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
-          <Megaphone className="w-64 h-64 text-white" />
+      <div className="relative rounded-3xl bg-white dark:bg-[#111318] p-6 sm:p-8 text-stone-900 dark:text-white border border-stone-200 dark:border-stone-800 shadow-xs overflow-hidden folio-card">
+        <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-5 pointer-events-none text-stone-900 dark:text-white">
+          <Megaphone className="w-64 h-64" />
         </div>
         <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-semibold backdrop-blur-md">
-            <span>Institute Stream & Announcements</span>
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-mono font-bold tracking-wider uppercase">
+            <span>Institute Stream & Bulletins</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Campus Notices & Bulletins
+          <h2 className="text-2xl sm:text-3xl font-display font-bold italic tracking-tight text-stone-900 dark:text-white">
+            Campus Notices & Circulars
           </h2>
-          <p className="text-indigo-100/80 text-xs sm:text-sm">
+          <p className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm font-sans leading-relaxed">
             Stay informed with real-time academic announcements, course circulars, and departmental updates.
           </p>
         </div>
@@ -255,13 +251,13 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
         <div className="flex flex-wrap items-center gap-2 flex-1">
           {/* Search Box */}
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="h-4 w-4 absolute left-3 top-2.5 text-slate-400" />
+            <Search className="h-4 w-4 absolute left-3 top-2.5 text-stone-400" />
             <input
               type="text"
               placeholder="Search announcements..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-3 py-2 bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
 
@@ -269,7 +265,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
           <select
             value={selectedSubjectId}
             onChange={(e) => setSelectedSubjectId(e.target.value)}
-            className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-mono font-bold text-stone-700 dark:text-stone-200 focus:outline-none focus:border-stone-900 dark:focus:border-white"
           >
             <option value="all">All Subjects</option>
             {subjects.map((sub) => (
@@ -289,10 +285,10 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                 href={meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/70 dark:hover:bg-emerald-900 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-bold transition-colors shrink-0 shadow-2xs"
+                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs font-bold transition-colors shrink-0 shadow-2xs font-sans"
                 title={`Join ${filteredSubjectObj.code} persistent Google Meet room`}
               >
-                <Video className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                <Video className="h-3.5 w-3.5 text-stone-700 dark:text-stone-300" />
                 <span className="hidden sm:inline">Join {filteredSubjectObj.code} Meet</span>
                 <span className="sm:hidden">Meet</span>
                 <ExternalLink className="h-3 w-3 opacity-75" />
@@ -309,7 +305,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
               type="button"
               onClick={() => openSaveMeetLinkModal()}
               id="save-meet-link-btn"
-              className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition-colors shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-white border border-stone-300 dark:border-stone-700 text-xs font-heading font-bold rounded-xl transition-colors shrink-0 cursor-pointer"
               title="Save or edit course Google Meet link"
             >
               <Video className="h-4 w-4" />
@@ -335,7 +331,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                 setIsCreating(true);
               }}
               id="create-announcement-btn"
-              className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-600/20 transition-colors shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 border border-stone-900 dark:border-white text-xs font-heading font-bold rounded-xl shadow-2xs transition-colors shrink-0 cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               <span>New Announcement</span>
@@ -347,12 +343,12 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
       {/* Announcements List */}
       <div className="space-y-4">
         {filteredAnnouncements.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center text-slate-500 space-y-2">
-            <Megaphone className="h-8 w-8 mx-auto text-slate-300 dark:text-slate-600" />
-            <p className="font-semibold text-xs text-slate-700 dark:text-slate-300">
+          <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-10 text-center text-stone-500 space-y-2 folio-card font-sans">
+            <Megaphone className="h-8 w-8 mx-auto text-stone-300 dark:text-stone-600" />
+            <p className="font-heading font-bold text-xs text-stone-700 dark:text-stone-300">
               No notices or bulletins found
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-stone-400">
               {isTeacher
                 ? 'Click "New Announcement" to publish updates to your students.'
                 : 'Your faculty will post announcements and course materials here.'}
@@ -377,21 +373,21 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
 
       {/* Create Announcement Modal */}
       {isCreating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-6 folio-card">
             
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <div className="flex items-center space-x-2">
-                <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+                <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white">
                   <Megaphone className="h-5 w-5" />
                 </div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-base">
+                <h3 className="font-display font-bold italic text-stone-900 dark:text-white text-base">
                   New Class Announcement
                 </h3>
               </div>
               <button
                 onClick={() => setIsCreating(false)}
-                className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400"
+                className="p-1 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-400 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -402,13 +398,13 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
               {/* Target Subject & Audience */}
               <div className="grid sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1">
                     Course / Subject
                   </label>
                   <select
                     value={formSubjectId}
                     onChange={(e) => setFormSubjectId(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 dark:text-white"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-medium text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
                   >
                     <option value="all">Broadcast to All Courses</option>
                     {subjects.map((sub) => (
@@ -420,14 +416,14 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center space-x-1">
-                    <Users className="h-3 w-3 text-indigo-500" />
+                  <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1 flex items-center space-x-1">
+                    <Users className="h-3 w-3 text-stone-400" />
                     <span>Target Audience</span>
                   </label>
                   <select
                     value={formAudience}
                     onChange={(e) => setFormAudience(e.target.value as AnnouncementAudience)}
-                    className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 dark:text-white"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-medium text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
                   >
                     <option value="all">All Members (Students & Staff)</option>
                     <option value="students_only">Students Only</option>
@@ -438,7 +434,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
 
               {/* Title */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1">
                   Announcement Title
                 </label>
                 <input
@@ -447,13 +443,13 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                   placeholder="e.g., Midterm Exam Schedule & Study Guide"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white font-sans focus:outline-none focus:border-stone-900 dark:focus:border-white"
                 />
               </div>
 
               {/* Message */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1">
                   Message Content
                 </label>
                 <textarea
@@ -462,7 +458,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                   placeholder="Write full notice details, instructions, or requirements..."
                   value={formContent}
                   onChange={(e) => setFormContent(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-white"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-xs text-stone-900 dark:text-white font-sans focus:outline-none focus:border-stone-900 dark:focus:border-white"
                 />
               </div>
 
@@ -470,12 +466,12 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
               {(() => {
                 const targetSubjForForm = subjects.find(s => s.id === formSubjectId);
                 return (
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 p-3.5 bg-slate-50/50 dark:bg-slate-800/40 space-y-2.5">
+                  <div className="rounded-2xl border border-stone-200 dark:border-stone-800 p-3.5 bg-stone-50/50 dark:bg-stone-900/40 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
-                        <Video className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <label className="text-xs font-heading font-bold text-stone-700 dark:text-stone-300 flex items-center space-x-1.5">
+                        <Video className="h-4 w-4 text-stone-500" />
                         <span>Google Meet Link</span>
-                        <span className="text-[10px] text-slate-400 font-normal">(Optional)</span>
+                        <span className="text-[10px] text-stone-400 font-normal font-sans">(Optional)</span>
                       </label>
 
                       {/* 1-Tap Button */}
@@ -483,10 +479,10 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                         type="button"
                         id="one-tap-meet-btn"
                         onClick={handleOneTapInsertMeetLink}
-                        className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] font-bold transition-all shadow-2xs active:scale-95 cursor-pointer"
+                        className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-white text-[11px] font-mono font-bold transition-all shadow-2xs active:scale-95 cursor-pointer"
                         title="1-Tap to insert saved persistent Google Meet link"
                       >
-                        <Video className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                        <Video className="h-3 w-3 text-stone-500" />
                         <span>
                           1-Tap: {targetSubjForForm?.code ? `${targetSubjForForm.code} Meet Link` : 'Subject Meet Link'}
                         </span>
@@ -499,33 +495,16 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                         placeholder="e.g. https://meet.google.com/abc-defg-hij"
                         value={formMeetUrl}
                         onChange={(e) => setFormMeetUrl(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 pr-8"
+                        className="w-full bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-stone-900 dark:focus:border-white pr-8 font-mono"
                       />
                       {formMeetUrl && (
                         <button
                           type="button"
                           onClick={() => setFormMeetUrl('')}
-                          className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                          className="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
                           title="Clear link"
                         >
                           <X className="h-3.5 w-3.5" />
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                      <span>Normalizes to start with <code className="text-emerald-600 dark:text-emerald-400 font-mono">https://</code></span>
-                      {formMeetUrl && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!formContent.includes(formMeetUrl)) {
-                              setFormContent(prev => prev ? `${prev}\n\nGoogle Meet Link: ${formMeetUrl}` : `Google Meet Link: ${formMeetUrl}`);
-                            }
-                          }}
-                          className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
-                        >
-                          + Add link to text
                         </button>
                       )}
                     </div>
@@ -535,7 +514,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
 
               {/* File Attachment Upload */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1">
                   File Attachment (Optional, &lt;800KB)
                 </label>
                 <input
@@ -547,20 +526,20 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                 />
                 
                 {formAttachment ? (
-                  <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 rounded-2xl flex items-center justify-between text-xs">
+                  <div className="p-2.5 bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl flex items-center justify-between text-xs">
                     <div className="flex items-center space-x-2 min-w-0">
-                      <FileText className="h-4 w-4 text-indigo-600 shrink-0" />
-                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">
+                      <FileText className="h-4 w-4 text-stone-500 shrink-0" />
+                      <span className="font-bold text-stone-800 dark:text-stone-200 truncate max-w-[200px]">
                         {formAttachment.fileName}
                       </span>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-stone-400">
                         ({Math.round(formAttachment.fileSize / 1024)} KB)
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={() => setFormAttachment(null)}
-                      className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -570,9 +549,9 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploading}
-                    className="w-full py-2.5 px-3 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:border-indigo-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center justify-center space-x-2 transition-colors"
+                    className="w-full py-2.5 px-3 border border-dashed border-stone-300 dark:border-stone-700 rounded-xl text-xs font-heading font-semibold text-stone-600 dark:text-stone-300 hover:border-stone-900 dark:hover:border-white hover:bg-stone-50 dark:hover:bg-stone-800/50 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
                   >
-                    <Paperclip className="h-4 w-4 text-indigo-500" />
+                    <Paperclip className="h-4 w-4 text-stone-400" />
                     <span>{isUploading ? 'Processing File...' : 'Attach Image, Syllabus, or Document'}</span>
                   </button>
                 )}
@@ -585,30 +564,30 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                   id="pinToggle"
                   checked={formIsPinned}
                   onChange={(e) => setFormIsPinned(e.target.checked)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="rounded border-stone-300 text-stone-900 focus:ring-stone-900"
                 />
                 <label
                   htmlFor="pinToggle"
-                  className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center"
+                  className="text-xs font-heading font-semibold text-stone-700 dark:text-stone-300 flex items-center cursor-pointer"
                 >
-                  <Pin className="h-3.5 w-3.5 mr-1 text-amber-500" />
+                  <Pin className="h-3.5 w-3.5 mr-1 text-stone-500" />
                   Pin notice to top of stream
                 </label>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-stone-100 dark:border-stone-800">
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting || isUploading}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20"
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs shadow-2xs cursor-pointer border border-stone-900 dark:border-white"
                 >
                   {isSubmitting ? 'Posting...' : 'Post Announcement'}
                 </button>
@@ -618,28 +597,28 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
         </div>
       )}
 
-      {/* Save Meet Link Modal (Next to New Announcement) */}
+      {/* Save Meet Link Modal */}
       {isManagingMeetLink && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-6 folio-card">
             
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <div className="flex items-center space-x-2">
-                <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white">
                   <Video className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-base">
+                  <h3 className="font-display font-bold italic text-stone-900 dark:text-white text-base">
                     Save Google Meet Link
                   </h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400 font-sans">
                     Configure persistent video meeting rooms for courses
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsManagingMeetLink(false)}
-                className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 cursor-pointer"
+                className="p-1 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-400 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -648,13 +627,13 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
             <form onSubmit={handleSaveMeetLink} className="space-y-4">
               {/* Subject select */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-heading font-bold text-stone-700 dark:text-stone-300 mb-1">
                   Select Course / Subject
                 </label>
                 <select
                   value={targetMeetSubjectId}
                   onChange={(e) => handleTargetSubjectChange(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs font-mono font-semibold text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
                 >
                   {subjects.map((sub) => (
                     <option key={sub.id} value={sub.id}>
@@ -667,7 +646,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
               {/* Link Input */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-heading font-bold text-stone-700 dark:text-stone-300">
                     Persistent Google Meet URL
                   </label>
                   {targetMeetUrl && (
@@ -675,7 +654,7 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                       href={targetMeetUrl.startsWith('http') ? targetMeetUrl : `https://${targetMeetUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center space-x-1"
+                      className="text-[11px] text-stone-900 dark:text-stone-100 font-bold hover:underline flex items-center space-x-1"
                     >
                       <span>Test Link</span>
                       <ExternalLink className="h-3 w-3" />
@@ -687,27 +666,27 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                   placeholder="e.g. meet.google.com/abc-defg-hij"
                   value={targetMeetUrl}
                   onChange={(e) => setTargetMeetUrl(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2.5 text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:border-stone-900 dark:focus:border-white font-mono"
                 />
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                  Will automatically be validated and normalized to start with <code className="text-emerald-600 dark:text-emerald-400 font-mono">https://</code>.
+                <p className="text-[10px] text-stone-500 dark:text-stone-400 mt-1 font-sans">
+                  Will automatically be validated and normalized to start with <code className="text-stone-900 dark:text-stone-100 font-mono">https://</code>.
                 </p>
               </div>
 
               {/* Success Banner */}
               {meetLinkSaveSuccess && (
-                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl flex items-center space-x-2 text-xs font-bold text-emerald-800 dark:text-emerald-300 animate-in fade-in">
-                  <Check className="h-4 w-4 text-emerald-600" />
+                <div className="p-3 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl flex items-center space-x-2 text-xs font-bold text-stone-900 dark:text-white animate-in fade-in">
+                  <Check className="h-4 w-4 text-stone-900 dark:text-white" />
                   <span>Google Meet link successfully saved and synced!</span>
                 </div>
               )}
 
               {/* Actions */}
-              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-end space-x-2 pt-2 border-t border-stone-100 dark:border-stone-800">
                 <button
                   type="button"
                   onClick={() => setIsManagingMeetLink(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -715,10 +694,10 @@ export const AnnouncementsTab: React.FC<AnnouncementsTabProps> = ({ userProfile,
                   type="submit"
                   disabled={isSavingMeetLink}
                   id="confirm-save-meet-btn"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center space-x-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs shadow-2xs flex items-center space-x-1.5 cursor-pointer border border-stone-900 dark:border-white"
                 >
                   {isSavingMeetLink ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
                   ) : (
                     <>
                       <Video className="h-3.5 w-3.5" />
@@ -760,7 +739,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   const [isSending, setIsSending] = useState(false);
   const [copiedMeet, setCopiedMeet] = useState(false);
 
-  // Determine effective Google Meet link: announcement's direct meetUrl, or subject's persistent meetUrl
+  // Determine effective Google Meet link
   const subjectMatch = subjects.find((s) => s.id === announcement.subjectId);
   const effectiveMeetUrl = announcement.meetUrl || subjectMatch?.meetUrl;
 
@@ -819,8 +798,6 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     minute: '2-digit'
   });
 
-  // Filter comments visible to current user
-  // Visible if public, or if current user is author, or current user is teacher
   const visibleComments = comments.filter((c) => {
     if (!c.isPrivate) return true;
     if (isTeacher) return true;
@@ -829,10 +806,10 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
 
   return (
     <div
-      className={`bg-white dark:bg-slate-900 border rounded-3xl p-5 sm:p-6 transition-all shadow-sm ${
+      className={`bg-white/95 dark:bg-[#111318]/95 border rounded-3xl p-5 sm:p-6 transition-all shadow-2xs folio-card ${
         announcement.isPinned
-          ? 'border-indigo-300 dark:border-indigo-800/80 ring-2 ring-indigo-500/10'
-          : 'border-slate-200 dark:border-slate-800'
+          ? 'border-stone-400 dark:border-stone-600 ring-1 ring-stone-400/20'
+          : 'border-stone-200 dark:border-stone-800'
       }`}
     >
       {/* Header Info */}
@@ -844,18 +821,18 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
           />
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-bold text-slate-900 dark:text-white text-sm">
+              <span className="font-heading font-bold text-stone-900 dark:text-white text-sm">
                 {announcement.teacherName}
               </span>
               {announcement.isPinned && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 text-[10px] font-mono font-bold">
                   <Pin className="h-3 w-3 mr-1" />
                   Pinned
                 </span>
               )}
               {/* Audience Pill */}
               {announcement.targetAudience && announcement.targetAudience !== 'all' && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold border border-indigo-200 dark:border-indigo-800">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-[10px] font-mono font-bold border border-stone-300 dark:border-stone-700">
                   <Users className="h-3 w-3 mr-1" />
                   {announcement.targetAudience === 'students_only'
                     ? 'Students Only'
@@ -863,8 +840,8 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 </span>
               )}
             </div>
-            <div className="flex items-center space-x-2 text-[11px] text-slate-500 dark:text-slate-400">
-              <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+            <div className="flex items-center space-x-2 text-[11px] text-stone-500 dark:text-stone-400 font-mono">
+              <span className="font-bold text-stone-800 dark:text-stone-200">
                 {announcement.subjectCode} • {announcement.subjectName}
               </span>
               <span>•</span>
@@ -876,7 +853,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
         {isTeacher && (
           <button
             onClick={() => onDelete(announcement.id)}
-            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition-colors"
+            className="p-2 text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition-colors cursor-pointer"
             title="Delete Announcement"
           >
             <Trash2 className="h-4 w-4" />
@@ -886,31 +863,31 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
 
       {/* Title & Body Content */}
       <div className="space-y-2 mb-4">
-        <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+        <h3 className="text-base sm:text-lg font-display font-bold text-stone-900 dark:text-white">
           {announcement.title}
         </h3>
-        <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+        <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 whitespace-pre-wrap leading-relaxed font-sans">
           {announcement.content}
         </p>
 
-        {/* Google Meet Live Session Banner (Surfaced on announcement) */}
+        {/* Google Meet Live Session Banner */}
         {effectiveMeetUrl && (
-          <div className="mt-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-50/90 to-teal-50/80 dark:from-emerald-950/40 dark:to-teal-950/30 border border-emerald-200 dark:border-emerald-800/70 shadow-xs">
+          <div className="mt-3 p-3.5 sm:p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center space-x-2.5 min-w-0">
-                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs shadow-emerald-600/30">
+                <div className="w-9 h-9 rounded-xl bg-stone-900 dark:bg-white text-white dark:text-stone-950 flex items-center justify-center shrink-0">
                   <Video className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                    <h4 className="font-heading font-bold text-xs sm:text-sm text-stone-900 dark:text-white truncate">
                       Google Meet Room
                     </h4>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
                       Live Link
                     </span>
                   </div>
-                  <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-mono truncate max-w-xs sm:max-w-md">
+                  <p className="text-[11px] text-stone-600 dark:text-stone-400 font-mono truncate max-w-xs sm:max-w-md">
                     {effectiveMeetUrl}
                   </p>
                 </div>
@@ -920,13 +897,13 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 <button
                   type="button"
                   onClick={() => handleCopyMeet(effectiveMeetUrl)}
-                  className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-800/60 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-300 text-xs font-semibold flex items-center space-x-1 shadow-2xs transition-colors cursor-pointer"
+                  className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white text-xs font-semibold flex items-center space-x-1 shadow-2xs transition-colors cursor-pointer"
                   title="Copy Google Meet link"
                 >
                   {copiedMeet ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600" />
-                      <span className="text-[11px] text-emerald-600 font-bold">Copied</span>
+                      <Check className="h-3.5 w-3.5 text-stone-900 dark:text-white" />
+                      <span className="text-[11px] font-bold">Copied</span>
                     </>
                   ) : (
                     <>
@@ -940,7 +917,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                   href={effectiveMeetUrl.startsWith('http') ? effectiveMeetUrl : `https://${effectiveMeetUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs shadow-emerald-600/20 flex items-center space-x-1.5 transition-colors cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs shadow-2xs flex items-center space-x-1.5 transition-colors cursor-pointer border border-stone-900 dark:border-white"
                   title="1-tap to join Google Meet room"
                 >
                   <Video className="h-3.5 w-3.5" />
@@ -954,7 +931,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
 
         {/* Attachment Card */}
         {announcement.attachmentUrl && (
-          <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md">
+          <div className="mt-3 p-3 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl max-w-md">
             {announcement.attachmentType?.startsWith('image/') ? (
               <div className="space-y-2">
                 <img
@@ -962,14 +939,14 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                   alt={announcement.attachmentName || 'Attachment'}
                   className="max-h-60 rounded-xl object-contain bg-black/5 mx-auto"
                 />
-                <div className="flex items-center justify-between text-xs pt-1">
-                  <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[200px]">
+                <div className="flex items-center justify-between text-xs pt-1 font-sans">
+                  <span className="font-medium text-stone-700 dark:text-stone-300 truncate max-w-[200px]">
                     {announcement.attachmentName || 'Image Attachment'}
                   </span>
                   <a
                     href={announcement.attachmentUrl}
                     download={announcement.attachmentName || 'image'}
-                    className="inline-flex items-center space-x-1 text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+                    className="inline-flex items-center space-x-1 text-stone-900 dark:text-white font-bold hover:underline"
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Download</span>
@@ -979,13 +956,13 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
             ) : (
               <div className="flex items-center justify-between space-x-3">
                 <div className="flex items-center space-x-2 min-w-0">
-                  <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <FileText className="h-5 w-5 text-stone-400 shrink-0" />
                   <div className="min-w-0">
-                    <p className="font-bold text-slate-900 dark:text-white text-xs truncate">
+                    <p className="font-bold text-stone-900 dark:text-white text-xs truncate">
                       {announcement.attachmentName || 'Course Attachment'}
                     </p>
                     {announcement.attachmentSize && (
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-stone-400 font-mono">
                         {Math.round(announcement.attachmentSize / 1024)} KB
                       </p>
                     )}
@@ -994,7 +971,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 <a
                   href={announcement.attachmentUrl}
                   download={announcement.attachmentName || 'attachment'}
-                  className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shrink-0 shadow-xs"
+                  className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 text-xs font-bold shrink-0 shadow-2xs border border-stone-900 dark:border-white"
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>Download</span>
@@ -1006,10 +983,10 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
       </div>
 
       {/* Footer / Comments Toggle */}
-      <div className="border-t border-slate-100 dark:border-slate-800 pt-3 flex items-center justify-between">
+      <div className="border-t border-stone-100 dark:border-stone-800 pt-3 flex items-center justify-between">
         <button
           onClick={toggleComments}
-          className="inline-flex items-center space-x-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+          className="inline-flex items-center space-x-2 text-xs font-heading font-bold text-stone-900 dark:text-white hover:underline cursor-pointer"
         >
           <MessageSquare className="h-4 w-4" />
           <span>
@@ -1020,12 +997,12 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
 
       {/* Comments Drawer */}
       {isOpenComments && (
-        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3 animate-in fade-in duration-200">
+        <div className="mt-4 pt-4 border-t border-stone-100 dark:border-stone-800 space-y-3 animate-in fade-in duration-200">
           
           {/* Comment List */}
           <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
             {visibleComments.length === 0 ? (
-              <p className="text-xs italic text-slate-400 py-1">
+              <p className="text-xs italic text-stone-400 py-1 font-sans">
                 No comments yet. Start the conversation!
               </p>
             ) : (
@@ -1034,8 +1011,8 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                   key={c.id}
                   className={`p-3 rounded-2xl space-y-1 ${
                     c.isPrivate
-                      ? 'bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40'
-                      : 'bg-slate-50 dark:bg-slate-800/50'
+                      ? 'bg-stone-100/80 dark:bg-stone-800/80 border border-stone-300 dark:border-stone-700'
+                      : 'bg-stone-50 dark:bg-stone-900/60'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -1045,20 +1022,20 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                         name={c.authorName}
                         size="xs"
                       />
-                      <span className="font-bold text-slate-900 dark:text-white text-xs">
+                      <span className="font-heading font-bold text-stone-900 dark:text-white text-xs">
                         {c.authorName}
                       </span>
                       <span
-                        className={`px-1.5 py-0.2 rounded-full text-[9px] font-bold uppercase ${
+                        className={`px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold uppercase ${
                           c.authorRole === 'teacher'
-                            ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
-                            : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
+                            ? 'bg-stone-900 text-white dark:bg-white dark:text-stone-950'
+                            : 'bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-300'
                         }`}
                       >
                         {c.authorRole}
                       </span>
                       {c.isPrivate && (
-                        <span className="inline-flex items-center px-1.5 py-0.2 rounded-full bg-amber-200 text-amber-900 dark:bg-amber-900/60 dark:text-amber-200 text-[9px] font-bold">
+                        <span className="inline-flex items-center px-1.5 py-0.2 rounded-full bg-stone-300 dark:bg-stone-700 text-stone-900 dark:text-stone-100 text-[9px] font-mono font-bold">
                           <Lock className="h-2.5 w-2.5 mr-0.5" />
                           Private to Faculty
                         </span>
@@ -1066,7 +1043,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-stone-400 font-mono">
                         {new Date(c.createdAt).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit'
@@ -1075,7 +1052,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                       {isTeacher && (
                         <button
                           onClick={() => handleDeleteComment(c.id)}
-                          className="text-slate-400 hover:text-rose-500 p-0.5"
+                          className="text-stone-400 hover:text-rose-500 p-0.5 cursor-pointer"
                           title="Delete comment"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -1083,7 +1060,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 pl-6">
+                  <p className="text-xs text-stone-700 dark:text-stone-300 pl-6 font-sans">
                     {c.content}
                   </p>
                 </div>
@@ -1103,12 +1080,12 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 }
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
               />
               <button
                 type="submit"
                 disabled={isSending || !newComment.trim()}
-                className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl disabled:opacity-50 transition-colors shrink-0"
+                className="p-2 bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 rounded-xl disabled:opacity-50 transition-colors shrink-0 cursor-pointer border border-stone-900 dark:border-white"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -1121,13 +1098,13 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
                 id={`private-comment-${announcement.id}`}
                 checked={isPrivateComment}
                 onChange={(e) => setIsPrivateComment(e.target.checked)}
-                className="rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                className="rounded border-stone-300 text-stone-900 focus:ring-stone-900"
               />
               <label
                 htmlFor={`private-comment-${announcement.id}`}
-                className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center cursor-pointer select-none"
+                className="text-[11px] font-medium text-stone-600 dark:text-stone-400 flex items-center cursor-pointer select-none font-sans"
               >
-                <Lock className="h-3 w-3 mr-1 text-amber-500" />
+                <Lock className="h-3 w-3 mr-1 text-stone-500" />
                 <span>Make comment private (Only Faculty & You can read it)</span>
               </label>
             </div>

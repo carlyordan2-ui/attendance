@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { UserProfile } from '../../types';
 import { AVATAR_PRESETS, getAvatarPreset } from '../../utils/avatars';
 import { AvatarDisplay } from '../common/AvatarDisplay';
 import { updateUserProfile } from '../../services/attendanceService';
 import { useAuth } from '../../contexts/AuthContext';
-import { X, Check, Save, User, Clock, Phone, Globe, Linkedin, Twitter, Compass } from 'lucide-react';
+import { X, Save, Clock, Phone, Globe, Linkedin, Twitter } from 'lucide-react';
 
 interface ProfileEditModalProps {
   isOpen: boolean;
@@ -26,7 +27,21 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
 
   const [isSaving, setIsSaving] = useState(false);
 
-  if (!isOpen || !userProfile) return null;
+  useEffect(() => {
+    if (userProfile) {
+      setSelectedAvatar(userProfile.avatar || 'grad');
+      setName(userProfile.name || '');
+      setDepartmentOrLocation(userProfile.departmentOrLocation || '');
+      setBio(userProfile.bio || '');
+      setOfficeHours(userProfile.officeHours || '');
+      setPhone(userProfile.phone || '');
+      setWebsite(userProfile.socialLinks?.website || '');
+      setLinkedin(userProfile.socialLinks?.linkedin || '');
+      setTwitter(userProfile.socialLinks?.twitter || '');
+    }
+  }, [userProfile, isOpen]);
+
+  if (!isOpen || !userProfile || typeof document === 'undefined') return null;
 
   const isTeacher = userProfile.role === 'teacher';
 
@@ -66,20 +81,28 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8 animate-in fade-in zoom-in-95 duration-150 folio-card">
+  const modalContent = (
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-auto animate-in fade-in zoom-in-95 duration-150 folio-card"
+      >
         
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4">
           <div className="flex items-center space-x-3">
             <AvatarDisplay avatarId={selectedAvatar} name={name} size="md" />
             <div>
-              <h3 className="font-display font-bold text-stone-900 dark:text-stone-100 text-lg">
+              <h3 className="font-display font-bold italic text-stone-900 dark:text-stone-100 text-lg">
                 Edit Profile
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
-                Update your profile information
+              <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
+                Update your profile information and credentials
               </p>
             </div>
           </div>
@@ -114,18 +137,18 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                     onClick={() => setSelectedAvatar(preset.id)}
                     className={`flex flex-col items-center p-2 rounded-xl transition-all relative cursor-pointer ${
                       isSelected
-                        ? 'ring-2 ring-amber-500 bg-amber-500/10'
+                        ? 'ring-2 ring-stone-900 dark:ring-white bg-stone-900/10 dark:bg-white/10'
                         : 'hover:bg-stone-200/50 dark:hover:bg-stone-800/50'
                     }`}
                   >
-                    <div className={`w-9 h-9 rounded-xl bg-stone-200 dark:bg-stone-800 flex items-center justify-center text-lg shadow-xs border border-stone-300/50 dark:border-stone-700/50`}>
+                    <div className="w-9 h-9 rounded-xl bg-stone-200 dark:bg-stone-800 flex items-center justify-center text-lg shadow-xs border border-stone-300/50 dark:border-stone-700/50">
                       {preset.emoji}
                     </div>
                     <span className="text-[9px] font-mono font-bold text-stone-700 dark:text-stone-300 mt-1 truncate max-w-full">
                       {preset.label}
                     </span>
                     {isSelected && (
-                      <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-amber-600 rounded-full flex items-center justify-center text-stone-950 text-[8px] font-bold">
+                      <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-stone-900 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-stone-950 text-[8px] font-bold">
                         ✓
                       </div>
                     )}
@@ -146,7 +169,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-heading font-bold text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
               />
             </div>
 
@@ -158,7 +181,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                 type="text"
                 value={departmentOrLocation}
                 onChange={(e) => setDepartmentOrLocation(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-sans text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs font-sans text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white"
               />
             </div>
           </div>
@@ -173,16 +196,16 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Brief summary..."
-              className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+              className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
             />
           </div>
 
           {/* Teacher Specific: Office hours & Phone */}
           {isTeacher && (
-            <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
+            <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
               <div>
-                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1 flex items-center space-x-1">
-                  <Clock className="h-3 w-3" />
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1 flex items-center space-x-1">
+                  <Clock className="h-3 w-3 text-stone-400" />
                   <span>Office Hours</span>
                 </label>
                 <input
@@ -190,13 +213,13 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                   placeholder="e.g., Mon/Wed 2-4 PM, Rm 304"
                   value={officeHours}
                   onChange={(e) => setOfficeHours(e.target.value)}
-                  className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1 flex items-center space-x-1">
-                  <Phone className="h-3 w-3" />
+                <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1 flex items-center space-x-1">
+                  <Phone className="h-3 w-3 text-stone-400" />
                   <span>Phone Number</span>
                 </label>
                 <input
@@ -204,7 +227,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                   placeholder="e.g., +1 (555) 019-2831"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-mono"
                 />
               </div>
             </div>
@@ -223,7 +246,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                   placeholder="Website URL"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
                 />
               </div>
               <div className="relative">
@@ -233,7 +256,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                   placeholder="LinkedIn / Portfolio"
                   value={linkedin}
                   onChange={(e) => setLinkedin(e.target.value)}
-                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
                 />
               </div>
               <div className="relative">
@@ -243,7 +266,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
                   placeholder="Twitter / X"
                   value={twitter}
                   onChange={(e) => setTwitter(e.target.value)}
-                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
+                  className="w-full pl-8 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-stone-900 dark:focus:border-white font-sans"
                 />
               </div>
             </div>
@@ -261,7 +284,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center space-x-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs uppercase tracking-wider shadow-2xs transition-all flex items-center space-x-2 cursor-pointer border border-stone-900 dark:border-white"
             >
               {isSaving ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
@@ -279,4 +302,6 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onCl
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };

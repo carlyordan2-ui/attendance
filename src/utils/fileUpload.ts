@@ -12,11 +12,12 @@ export interface UploadedAttachment {
 
 export type FileUploadResult = UploadedAttachment;
 
-const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB
-const MAX_DOC_SIZE = 800 * 1024;   // 800 KB for PDF/docs
+// Strictly keep document attachments under 700KB to guarantee never breaching Firestore's 1MB doc payload limit
+const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB target
+const MAX_DOC_SIZE = 750 * 1024;   // 750 KB for PDF/docs
 
 /**
- * Compresses an image file using an HTML5 canvas to keep size under ~500KB.
+ * Compresses an image file safely using an HTML5 canvas to keep size under ~500KB.
  */
 async function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -29,7 +30,7 @@ async function compressImage(file: File): Promise<string> {
         // Calculate dimensions maintaining aspect ratio
         let width = img.width;
         let height = img.height;
-        const maxDimension = 1280;
+        const maxDimension = 1200;
 
         if (width > maxDimension || height > maxDimension) {
           if (width > height) {
@@ -52,9 +53,9 @@ async function compressImage(file: File): Promise<string> {
         ctx.drawImage(img, 0, 0, width, height);
 
         // Progressively compress quality if needed
-        let quality = 0.85;
+        let quality = 0.8;
         let dataUrl = canvas.toDataURL('image/jpeg', quality);
-        while (dataUrl.length > MAX_IMAGE_SIZE * 1.33 && quality > 0.3) {
+        while (dataUrl.length > MAX_IMAGE_SIZE * 1.33 && quality > 0.25) {
           quality -= 0.15;
           dataUrl = canvas.toDataURL('image/jpeg', quality);
         }
@@ -68,12 +69,12 @@ async function compressImage(file: File): Promise<string> {
 }
 
 /**
- * Reads a non-image file (PDF, TXT, DOC) and validates size limit (~800KB).
+ * Reads a non-image file (PDF, TXT, DOC) and validates strict size limits (max 750KB).
  */
 async function readDocAsDataUrl(file: File): Promise<string> {
   if (file.size > MAX_DOC_SIZE) {
     throw new Error(
-      `File size (${(file.size / 1024).toFixed(0)} KB) exceeds the 800 KB limit for non-image files.`
+      `File size (${(file.size / 1024).toFixed(0)} KB) exceeds the 750 KB database safety limit. Please upload a smaller file or compressed document.`
     );
   }
 
@@ -86,7 +87,7 @@ async function readDocAsDataUrl(file: File): Promise<string> {
 }
 
 /**
- * Process a user-selected file, compressing images or capping docs.
+ * Process a user-selected file, compressing images or capping docs safely.
  */
 export async function processFileUpload(file: File): Promise<UploadedAttachment> {
   const isImage = file.type.startsWith('image/');

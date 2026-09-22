@@ -64,12 +64,12 @@ export const SubjectEnrollmentTab: React.FC = () => {
     <div className="space-y-6">
       
       {/* Banner */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-2">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-          <BookOpen className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+      <div className="bg-white/90 dark:bg-[#111318]/90 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 shadow-2xs folio-card space-y-2">
+        <h3 className="text-xl font-display font-bold italic text-stone-900 dark:text-white flex items-center space-x-2">
+          <BookOpen className="h-6 w-6 text-stone-700 dark:text-stone-300" />
           <span>Available Subjects</span>
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-stone-500 dark:text-stone-400 font-sans">
           Apply for subjects to start attending classes. Teacher approval required.
         </p>
       </div>
@@ -77,7 +77,7 @@ export const SubjectEnrollmentTab: React.FC = () => {
       {/* Grid of Subjects */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {subjects.length === 0 ? (
-          <div className="col-span-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center text-xs text-slate-500">
+          <div className="col-span-full bg-white dark:bg-[#111318] border border-stone-200 dark:border-stone-800 rounded-3xl p-8 text-center text-xs text-stone-500 font-sans folio-card">
             No subjects available yet.
           </div>
         ) : (
@@ -87,11 +87,11 @@ export const SubjectEnrollmentTab: React.FC = () => {
             return (
               <div 
                 key={subj.id}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                className="bg-white/95 dark:bg-[#111318]/95 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-2xs hover:border-stone-400 dark:hover:border-stone-600 transition-all flex flex-col justify-between space-y-4 folio-card"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-mono font-bold text-xs border border-indigo-200 dark:border-indigo-800/50">
+                    <span className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-mono font-bold text-xs border border-stone-200 dark:border-stone-700">
                       {subj.code}
                     </span>
 
@@ -118,43 +118,43 @@ export const SubjectEnrollmentTab: React.FC = () => {
                         </span>
                       )
                     ) : (
-                      <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold">
+                      <span className="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 text-xs font-semibold">
                         Not Enrolled
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-lg font-display font-bold text-stone-900 dark:text-white">
                       {subj.name}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center space-x-1">
-                      <User className="h-3.5 w-3.5 text-indigo-500" />
+                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 flex items-center space-x-1 font-sans">
+                      <User className="h-3.5 w-3.5 text-stone-400" />
                       <span>Faculty: {subj.teacherName}</span>
                     </p>
                   </div>
 
-                  <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <div className="text-xs text-stone-500 dark:text-stone-400 space-y-1.5 bg-stone-50 dark:bg-stone-900/60 p-3 rounded-2xl border border-stone-100 dark:border-stone-800 font-sans">
                     <div className="flex items-center space-x-1.5">
-                      <Clock className="h-3.5 w-3.5 text-amber-500" />
+                      <Clock className="h-3.5 w-3.5 text-stone-400" />
                       <span>{subj.schedule}</span>
                     </div>
                     <div className="flex items-center space-x-1.5">
-                      <MapPin className="h-3.5 w-3.5 text-emerald-500" />
+                      <MapPin className="h-3.5 w-3.5 text-stone-400" />
                       <span>{subj.room}</span>
                     </div>
 
                     {/* Google Meet Link if enrolled */}
                     {enrollment?.status === 'approved' && subj.meetUrl && (
-                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                      <div className="pt-2 border-t border-stone-200/60 dark:border-stone-800">
                         <a
                           href={subj.meetUrl.startsWith('http') ? subj.meetUrl : `https://${subj.meetUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
+                          className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-stone-800 dark:hover:bg-stone-700 text-white font-bold text-xs transition-colors"
                         >
-                          <Video className="h-3.5 w-3.5" />
-                          <span>Join Google Meet</span>
+                          <Video className="h-3.5 w-3.5 text-stone-300" />
+                          <span>Join Video Call</span>
                         </a>
                       </div>
                     )}
@@ -163,7 +163,7 @@ export const SubjectEnrollmentTab: React.FC = () => {
 
                 {/* Apply Button or Blocked Notice */}
                 {userProfile?.uid && subj.blockedStudentIds?.includes(userProfile.uid) ? (
-                  <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center">
+                  <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center font-sans">
                     Enrollment suspended by instructor
                   </div>
                 ) : !enrollment && (
@@ -171,10 +171,10 @@ export const SubjectEnrollmentTab: React.FC = () => {
                     onClick={() => handleApply(subj)}
                     disabled={submittingSubjectId === subj.id}
                     id={`apply-enrollment-btn-${subj.code}`}
-                    className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-1.5"
+                    className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-950 font-heading font-bold text-xs shadow-2xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer border border-stone-900 dark:border-white"
                   >
                     {submittingSubjectId === subj.id ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white dark:border-stone-950/30 dark:border-t-stone-950 rounded-full animate-spin" />
                     ) : (
                       <>
                         <PlusCircle className="h-4 w-4" />
